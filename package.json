@@ -3,11 +3,13 @@
   "version": "1.0.1",
   "description": "A package that allows you to know whether caps lock is active or not",
   "main": "lib/index.js",
-  "type": "module",
   "types": "lib/index.d.ts",
   "files": [
     "lib"
   ],
+  "scripts": {
+    "build": "tsc" 
+  },
   "devDependencies": {
     "typescript": "next"
   },
