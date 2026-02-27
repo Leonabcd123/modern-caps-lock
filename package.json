@@ -1,12 +1,12 @@
 {
   "name": "@leonabcd123/modern-caps-lock",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A package that allows you to know whether caps lock is active or not",
   "main": "lib/index.js",
   "type": "module",
   "types": "lib/index.d.ts",
   "files": [
-    "lib" 
+    "lib"
   ],
   "devDependencies": {
     "typescript": "next"
