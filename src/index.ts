@@ -1,10 +1,6 @@
-function isPlatform(searchTerm: string | RegExp): boolean {
+function isPlatform(searchTerm: string): boolean {
   const platform = navigator.platform;
-  if (typeof searchTerm === "string") {
-    return platform.includes(searchTerm);
-  } else {
-    return searchTerm.test(platform);
-  }
+  return platform.includes(searchTerm);
 }
 
 function getCurrentOs(): "Mac" | "Linux" | "Windows" | "Unknown" {
