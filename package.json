@@ -11,7 +11,7 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "typescript": "next"
+    "typescript": "^5.9.0"
   },
   "repository": {
     "type": "git",
