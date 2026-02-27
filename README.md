@@ -7,7 +7,7 @@ Modern Caps Lock provides an easy way to know whether Caps Lock is currently act
 Example installation with npm:
 
 ```
-npm install "@leonabcd123/modern-caps-lock"
+npm install @leonabcd123/modern-caps-lock
 ```
 
 ### Examples
