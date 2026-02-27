@@ -21,6 +21,9 @@
     "caps-lock"
   ],
   "author": "Leonabcd123",
+  "contributors": [
+    "fehmer"
+  ],
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/Leonabcd123/modern-caps-lock/issues"
