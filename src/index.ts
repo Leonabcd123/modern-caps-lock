@@ -10,7 +10,7 @@ function getCurrentOs(): "Mac" | "Linux" | "Windows" | "Unknown" {
   if (isPlatform("Linux")) {
     return "Linux";
   }
-  if (isPlatform("Windows")) {
+  if (isPlatform("Win")) {
     return "Windows";
   }
   return "Unknown";
