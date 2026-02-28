@@ -53,7 +53,7 @@ onCapsLockChange((capsState) => {
 ```js
 import { isCapsLockOn } from "@leonabcd123/modern-caps-lock";
 
-if (isCapsLockOn()){
+if (isCapsLockOn()) {
   console.log("Caps Lock is on!");
 } else {
   console.log("Caps Lock is off!");
