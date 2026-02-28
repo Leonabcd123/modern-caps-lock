@@ -1,6 +1,6 @@
 # Modern Caps Lock
 
-Modern Caps Lock provides an easy way to know whether Caps Lock is currently active or not, and it allows you run your code whenever Caps Lock state is changed.
+Modern Caps Lock provides an easy way to check whether Caps Lock is currently active or not, and it allows you to run your code whenever Caps Lock state changes.
 
 ### Installation
 
@@ -9,6 +9,33 @@ Example installation with npm:
 ```
 npm install @leonabcd123/modern-caps-lock
 ```
+
+### API
+
+#### onCapsLockChange()
+
+Runs the provided callback function whenever Caps Lock state is changed.
+
+##### Arguments
+
+`callback: (capsState: boolean) => void`: a function that takes one argument (`capsState`) and returns nothing. That function will be executed after every Caps Lock state change.
+
+##### Return value
+
+`void`.
+
+#### isCapsLockOn()
+
+Returns the current Caps Lock state.
+
+##### Arguments
+
+None.
+
+##### Return value
+
+`capsState: boolean`: a boolean representing the current Caps Lock state. If it's true, Caps Lock is on, and if it's false, Caps Lock is off.
+
 
 ### Examples
 
