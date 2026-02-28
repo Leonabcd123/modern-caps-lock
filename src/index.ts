@@ -20,9 +20,15 @@ let capsState = false;
 const os = getCurrentOs();
 let onCapsChangeCallback: (capsState: boolean) => void;
 
-function getCapsLockModifierState(event: KeyboardEvent): boolean {
+function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
   return event.getModifierState("CapsLock");
 }
+
+document.addEventListener("mousedown", (event) => {
+  // All platforms send correct state on mousedown
+  capsState = getCapsLockModifierState(event);
+  onCapsChangeCallback(capsState);
+});
 
 document.addEventListener("keyup", (event) => {
   if (os === "Mac") {
