@@ -18,7 +18,7 @@ function getCurrentOs(): "Mac" | "Linux" | "Windows" | "Unknown" {
 
 let capsState = false;
 const os = getCurrentOs();
-let onCapsChangeHandler: (capsState: boolean) => void;
+let onCapsChangeCallback: (capsState: boolean) => void;
 
 function getCapsLockModifierState(event: KeyboardEvent): boolean {
   return event.getModifierState("CapsLock");
@@ -43,7 +43,7 @@ document.addEventListener("keyup", (event) => {
     // Linux sends the correct state on keyup if key isn't Caps Lock.
     capsState = getCapsLockModifierState(event);
   }
-  onCapsChangeHandler(capsState);
+  onCapsChangeCallback(capsState);
 });
 
 document.addEventListener("keydown", (event) => {
@@ -51,7 +51,7 @@ document.addEventListener("keydown", (event) => {
     // macOS sends only keydown when enabling Caps Lock and only keyup when disabling.
     if (event.key === "CapsLock") {
       capsState = true;
-      onCapsChangeHandler(capsState);
+      onCapsChangeCallback(capsState);
     }
   } else if (os === "Linux") {
     /* Linux sends the correct state before Caps Lock is toggled only on keydown,
@@ -67,6 +67,6 @@ export function isCapsLockOn(): boolean {
   return capsState;
 } 
 
-export function onCapsLockChange(handler: (capsState: boolean) => void): void {
-  onCapsChangeHandler = handler;
+export function onCapsLockChange(callback: (capsState: boolean) => void): void {
+  onCapsChangeCallback = callback;
 }

@@ -1,2 +1,2 @@
 export declare function isCapsLockOn(): boolean;
-export declare function onCapsLockChange(handler: (capsState: boolean) => void): void;
+export declare function onCapsLockChange(callback: (capsState: boolean) => void): void;
