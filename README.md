@@ -1,6 +1,6 @@
 # Modern Caps Lock
 
-Modern Caps Lock provides an easy way to check whether Caps Lock is currently active or not, and it allows you to run your code whenever Caps Lock state changes.
+Modern Caps Lock provides an easy way to check whether Caps Lock is active or not, and it allows you to run your code whenever Caps Lock state changes.
 
 ### Installation
 
@@ -18,7 +18,7 @@ Runs the provided callback function whenever Caps Lock state is changed.
 
 ##### Arguments
 
-`callback: (capsState: boolean) => void`: a function that takes one argument (`capsState`) and returns nothing. That function will be executed after every Caps Lock state change.
+`callback: (capsState: boolean) => void`: a function that takes one argument (`capsState`) and returns nothing. This function is executed after every Caps Lock state change.
 
 ##### Return value
 
@@ -34,7 +34,7 @@ None.
 
 ##### Return value
 
-`capsState: boolean`: a boolean representing the current Caps Lock state. If it's true, Caps Lock is on, and if it's false, Caps Lock is off.
+`capsState: boolean`: a boolean representing the current Caps Lock state. If `true`, Caps Lock is on; if `false`, Caps Lock is off.
 
 
 ### Examples
