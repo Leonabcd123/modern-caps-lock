@@ -20,6 +20,8 @@ let previousCapsState = false;
 let capsState = false;
 const os = getCurrentOs();
 let onCapsChangeCallback: (capsState: boolean) => void;
+// All events that fire a MouseEvent that we want to update capsState when they're fired.
+const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"];
 
 function callCallbackIfNeeded(): void {
   const callCallback = previousCapsState !== capsState;
@@ -33,10 +35,14 @@ function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
   return event.getModifierState("CapsLock");
 }
 
-document.addEventListener("mousedown", (event) => {
-  // All platforms send correct state on mousedown
-  capsState = getCapsLockModifierState(event);
-  callCallbackIfNeeded();
+mouseEventsToUpdateOn.forEach((eventType) => {
+  document.addEventListener(eventType, (event) => {
+    if (event instanceof MouseEvent){
+      // All platforms send correct state on MouseEvent 
+      capsState = getCapsLockModifierState(event);
+      callCallbackIfNeeded();
+    }
+  });
 });
 
 document.addEventListener("keyup", (event) => {
