@@ -32,7 +32,7 @@ function callCallbackIfNeeded(): void {
 }
 
 function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
-  // Need this check because autofill can send type Event that will still trigger the keydown and keyup event listeners.
+  // Need this check because autofill in Chrome/Edge can send type Event that will still trigger the keydown and keyup event listeners.
   // See https://github.com/microsoft/monaco-editor/issues/4325
   if ("getModifierState" in event) {
     return event.getModifierState("CapsLock");
