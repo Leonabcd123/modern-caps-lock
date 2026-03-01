@@ -27,18 +27,24 @@ function callCallbackIfNeeded(): void {
   const callCallback = previousCapsState !== capsState;
   previousCapsState = capsState;
   if (callCallback) {
-    onCapsChangeCallback(capsState); 
+    onCapsChangeCallback(capsState);
   }
 }
 
 function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
-  return event.getModifierState("CapsLock");
+  // Need this check because autofill can send type Event that will still trigger the keydown and keyup event listeners.
+  // See https://github.com/microsoft/monaco-editor/issues/4325
+  if ("getModifierState" in event) {
+    return event.getModifierState("CapsLock");
+  } else {
+    return capsState;
+  }
 }
 
 mouseEventsToUpdateOn.forEach((eventType) => {
   document.addEventListener(eventType, (event) => {
-    if (event instanceof MouseEvent){
-      // All platforms send correct state on MouseEvent 
+    if (event instanceof MouseEvent) {
+      // All platforms send correct state on MouseEvent
       capsState = getCapsLockModifierState(event);
       callCallbackIfNeeded();
     }
@@ -86,7 +92,7 @@ document.addEventListener("keydown", (event) => {
 
 export function isCapsLockOn(): boolean {
   return capsState;
-} 
+}
 
 export function onCapsLockChange(callback: (capsState: boolean) => void): void {
   onCapsChangeCallback = callback;
