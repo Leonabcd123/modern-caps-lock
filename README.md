@@ -59,3 +59,7 @@ if (isCapsLockOn()) {
   console.log("Caps Lock is off!");
 }
 ```
+
+### Credits
+
+Created by [Leon](https://github.com/Leonabcd123) and [fehmer](https://github.com/fehmer).
