@@ -1,6 +1,6 @@
 {
   "name": "@leonabcd123/modern-caps-lock",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "A package that allows you to know whether caps lock is active or not",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -18,7 +18,11 @@
     "url": "git+https://github.com/Leonabcd123/modern-caps-lock.git"
   },
   "keywords": [
-    "caps-lock", "caps", "lock", "cross-platform", "modern"
+    "caps-lock",
+    "caps",
+    "lock",
+    "cross-platform",
+    "modern"
   ],
   "author": "Leonabcd123",
   "contributors": [
