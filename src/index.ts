@@ -1,15 +1,17 @@
 function isPlatform(searchTerm: string): boolean {
-  return navigator.platform.startsWith(searchTerm);
+  // @ts-expect-error userAgentData is experimental, only supported on Chrome/Edge.
+  // Fallback to navigator.platform when dealing with other browsers. 
+  return ((navigator.userAgentData ?? navigator).platform).toLowerCase().startsWith(searchTerm);
 }
 
 function getCurrentOs(): "Mac" | "Linux" | "Windows" | "Unknown" {
-  if (isPlatform("Mac")) {
+  if (isPlatform("mac")) {
     return "Mac";
   }
-  if (isPlatform("Linux")) {
+  if (isPlatform("linux")) {
     return "Linux";
   }
-  if (isPlatform("Win")) {
+  if (isPlatform("win")) {
     return "Windows";
   }
   return "Unknown";
