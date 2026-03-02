@@ -62,6 +62,7 @@ document.addEventListener("keyup", (event) => {
       // So don't update caps state on any keypress which isn't Caps Lock.
       // When Caps Lock is pressed handle it the same as on macOS.
       if (navigator.maxTouchPoints <= 1) {
+        // macOS sends correct state on keyup.
         capsState = getCapsLockModifierState(event);
       }
     }
