@@ -1,9 +1,20 @@
+/**
+ * Checks whether the user is running some operating system.
+ *
+ * @param searchTerm - The operating system name (as it appears in navigator.platform)
+ * @returns whether the user is running that operating system or not
+ */
 function isPlatform(searchTerm: string): boolean {
   // @ts-expect-error userAgentData is experimental, only supported on Chrome/Edge/Opera.
   // Fallback to navigator.platform when dealing with other browsers. 
   return ((navigator.userAgentData ?? navigator).platform).toLowerCase().startsWith(searchTerm);
 }
 
+/**
+ * Gets the current operating system the user is running.
+ *
+ * @returns the operating system the user is running
+ */
 function getCurrentOs(): "Mac" | "Linux" | "Windows" | "Unknown" {
   if (isPlatform("mac")) {
     return "Mac";
@@ -24,6 +35,9 @@ let onCapsChangeCallback: (capsState: boolean) => void;
 // All events that fire a MouseEvent that we want to update capsState when they're fired.
 const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"];
 
+/**
+ * Calls the previously provided callback function when Caps Lock state changes.
+ */
 function callCallbackIfNeeded(): void {
   const callCallback = previousCapsState !== capsState;
   previousCapsState = capsState;
@@ -31,6 +45,13 @@ function callCallbackIfNeeded(): void {
     onCapsChangeCallback(capsState);
   }
 }
+
+/**
+ * Get the current Caps Lock state based on the getModifierState function.
+ *
+ * @param event - The event used to check the Caps Lock state
+ * @returns The current Caps Lock state.
+ */
 
 function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
   // Need this check because autofill in Chrome/Edge can send type Event that will still trigger the keydown and keyup event listeners.
@@ -93,9 +114,19 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+/**
+ * Returns the current Caps Lock state.
+ */
+
 export function isCapsLockOn(): boolean {
   return capsState;
 }
+
+/**
+ * Sets up a callback function to be called whenever Caps Lock state changes.
+ *
+ * @param callback - The callback function
+ */
 
 export function onCapsLockChange(callback: (capsState: boolean) => void): void {
   onCapsChangeCallback = callback;
