@@ -42,6 +42,7 @@ function callCallbackIfNeeded(): void {
   const callCallback = previousCapsState !== capsState;
   previousCapsState = capsState;
   if (callCallback) {
+    // We're using optional chaining here because onCapsChangeCallback is undefined when onCapsLockChange isn't used.
     onCapsChangeCallback?.(capsState);
   }
 }
