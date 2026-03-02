@@ -1,5 +1,5 @@
 function isPlatform(searchTerm: string): boolean {
-  // @ts-expect-error userAgentData is experimental, only supported on Chrome/Edge.
+  // @ts-expect-error userAgentData is experimental, only supported on Chrome/Edge/Opera.
   // Fallback to navigator.platform when dealing with other browsers. 
   return ((navigator.userAgentData ?? navigator).platform).toLowerCase().startsWith(searchTerm);
 }
