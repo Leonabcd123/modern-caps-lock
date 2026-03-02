@@ -42,7 +42,7 @@ function callCallbackIfNeeded(): void {
   const callCallback = previousCapsState !== capsState;
   previousCapsState = capsState;
   if (callCallback) {
-    onCapsChangeCallback(capsState);
+    onCapsChangeCallback?.(capsState);
   }
 }
 
