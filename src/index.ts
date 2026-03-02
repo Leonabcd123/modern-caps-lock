@@ -1,13 +1,13 @@
 /**
  * Checks whether the user is running some operating system.
  *
- * @param searchTerm - The operating system name (as it appears in navigator.platform)
+ * @param osName - The operating system name (as it appears in navigator.platform)
  * @returns whether the user is running that operating system or not
  */
-function isPlatform(searchTerm: string): boolean {
+function isPlatform(osName: string): boolean {
   // @ts-expect-error userAgentData is experimental, only supported on Chrome/Edge/Opera.
   // Fallback to navigator.platform when dealing with other browsers. 
-  return ((navigator.userAgentData ?? navigator).platform).toLowerCase().startsWith(searchTerm);
+  return ((navigator.userAgentData ?? navigator).platform).toLowerCase().startsWith(osName);
 }
 
 /**
@@ -52,7 +52,6 @@ function callCallbackIfNeeded(): void {
  * @param event - The event used to check the Caps Lock state
  * @returns The current Caps Lock state.
  */
-
 function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
   // Need this check because autofill in Chrome/Edge can send type Event that will still trigger the keydown and keyup event listeners.
   // See https://github.com/microsoft/monaco-editor/issues/4325
@@ -117,7 +116,6 @@ document.addEventListener("keydown", (event) => {
 /**
  * Returns the current Caps Lock state.
  */
-
 export function isCapsLockOn(): boolean {
   return capsState;
 }
@@ -127,7 +125,6 @@ export function isCapsLockOn(): boolean {
  *
  * @param callback - The callback function
  */
-
 export function onCapsLockChange(callback: (capsState: boolean) => void): void {
   onCapsChangeCallback = callback;
 }
