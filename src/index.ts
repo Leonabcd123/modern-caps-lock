@@ -1,6 +1,5 @@
 function isPlatform(searchTerm: string): boolean {
-  const platform = navigator.platform;
-  return platform.includes(searchTerm);
+  return navigator.platform.startsWith(searchTerm);
 }
 
 function getCurrentOs(): "Mac" | "Linux" | "Windows" | "Unknown" {
