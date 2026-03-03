@@ -1,14 +1,14 @@
 /**
  * Checks whether the user is running some operating system.
  *
- * @param osName - The operating system name (as it appears in navigator.platform)
+ * @param osName - The operating system name (as a RegExp object)
  * @returns Whether the user is running that operating system or not
  */
-function isPlatform(osName: string): boolean {
+function isPlatform(osName: RegExp): boolean {
   // @ts-expect-error userAgentData is experimental, only supported on Chrome/Edge/Opera.
-  // Fallback to navigator.platform when dealing with other browsers. 
-  // Also test navigator.userAgent in cases where navigator.platform doesn't detect the os.
-  return ((navigator.userAgentData ?? navigator).platform).toLowerCase().startsWith(osName) || new RegExp(osName, "i").test(navigator.userAgent);
+  // Fallback to navigator.oscpu which is only supported on Firefox.
+  // Fallback to navigator.userAgent and navigator.platform for other browsers.
+  return osName.test(navigator.userAgentData?.platform ?? (navigator.oscpu || navigator.userAgent || navigator.platform));
 }
 
 /**
@@ -17,13 +17,13 @@ function isPlatform(osName: string): boolean {
  * @returns The operating system the user is running
  */
 function getCurrentOs(): "Mac" | "Linux" | "Windows" | "Unknown" {
-  if (isPlatform("mac")) {
+  if (isPlatform(/Mac/i)) {
     return "Mac";
   }
-  if (isPlatform("linux")) {
+  if (isPlatform(/Linux/i)) {
     return "Linux";
   }
-  if (isPlatform("win")) {
+  if (isPlatform(/Win/i)) {
     return "Windows";
   }
   return "Unknown";
