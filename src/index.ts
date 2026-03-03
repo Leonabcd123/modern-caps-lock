@@ -7,7 +7,7 @@
 function isPlatform(osName: string): boolean {
   // @ts-expect-error userAgentData is experimental, only supported on Chrome/Edge/Opera.
   // Fallback to navigator.platform when dealing with other browsers. 
-  return ((navigator.userAgentData ?? navigator).platform).toLowerCase().startsWith(osName);
+  return ((navigator.userAgentData ?? navigator).platform).toLowerCase().startsWith(osName) || new RegExp(osName, "i").test(navigator.userAgent);
 }
 
 /**
