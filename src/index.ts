@@ -77,7 +77,7 @@ document.addEventListener("keyup", (event) => {
     if (event.key === "CapsLock") {
       capsState = false;
     } else {
-      // IPad doesn't send caps state on any keypress which isn't Caps Lock,
+      // iPad doesn't send caps state on any keypress which isn't Caps Lock,
       // So don't update caps state on any keypress which isn't Caps Lock.
       // When Caps Lock is pressed handle it the same as on macOS.
       if (navigator.maxTouchPoints <= 1) {
