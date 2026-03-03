@@ -32,7 +32,8 @@ function getCurrentOs(): "Mac" | "Linux" | "Windows" | "Unknown" {
 let previousCapsState = false;
 let capsState = false;
 const os = getCurrentOs();
-let onCapsChangeCallback: (capsState: boolean) => void;
+type OnCapsChangeCallback = (capsState: boolean) => void;
+let onCapsChangeCallback: OnCapsChangeCallback;
 // All events that fire a MouseEvent that we want to update capsState when they're fired.
 const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"];
 
@@ -126,6 +127,6 @@ export function isCapsLockOn(): boolean {
  *
  * @param callback - The callback function
  */
-export function onCapsLockChange(callback: (capsState: boolean) => void): void {
+export function onCapsLockChange(callback: OnCapsChangeCallback): void {
   onCapsChangeCallback = callback;
 }
