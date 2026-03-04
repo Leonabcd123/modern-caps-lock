@@ -36,6 +36,11 @@ type OnCapsChangeCallback = (capsState: boolean) => void;
 let onCapsChangeCallback: OnCapsChangeCallback;
 // All events that fire a MouseEvent that we want to update capsState when they're fired.
 const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"];
+const isiPad = os === "Mac" && navigator.maxTouchPoints > 1;
+// This determines whether we ignore the result of getCapsLockModifierState or not when receiving a keyup event for a key which isn't Caps Lock on iPad.
+// This is because iPad with default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
+// But macOS (on desktop) and iPad with external keyboard do send Caps Lock state.
+let isSendingCapsLockStateOniPad = !isiPad;
 
 /**
  * Calls the previously provided callback function when Caps Lock state changes.
@@ -65,9 +70,11 @@ function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
 mouseEventsToUpdateOn.forEach((eventType) => {
   document.addEventListener(eventType, (event) => {
     if (event instanceof MouseEvent) {
-      // All platforms send correct state on MouseEvent
-      capsState = getCapsLockModifierState(event);
-      callCallbackIfNeeded();
+      // All platforms except iPad send correct state on MouseEvent.
+      if (!isiPad) {
+        capsState = getCapsLockModifierState(event);
+        callCallbackIfNeeded();
+      }
     }
   });
 });
@@ -78,12 +85,16 @@ document.addEventListener("keyup", (event) => {
     if (event.key === "CapsLock") {
       capsState = false;
     } else {
-      // iPad doesn't send caps state on any keypress which isn't Caps Lock,
-      // So don't update caps state on any keypress which isn't Caps Lock.
+      // iPad's default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
+      // So don't update (as a default) Caps Lock state on any keypress which isn't Caps Lock.
       // When Caps Lock is pressed handle it the same as on macOS.
-      if (navigator.maxTouchPoints <= 1) {
+      // To decide whether to ignore Caps Lock state on other keypresses or not on iPad,
+      // We check whether we've previously received a modifier state with the value true.
+      const currentCapsState = getCapsLockModifierState(event);
+      isSendingCapsLockStateOniPad ||= currentCapsState;
+      if (isSendingCapsLockStateOniPad) {
         // macOS sends correct state on keyup.
-        capsState = getCapsLockModifierState(event);
+        capsState = currentCapsState;
       }
     }
   } else if (os === "Windows") {
