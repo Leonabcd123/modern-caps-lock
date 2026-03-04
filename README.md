@@ -60,6 +60,32 @@ if (isCapsLockOn()) {
 }
 ```
 
+### Support
+
+##### Supported Platforms:
+
+- Windows
+- Mac
+- Linux
+- iPad
+
+##### Unsupported Platforms:
+
+- Platforms using [GBoard](https://en.wikipedia.org/wiki/Gboard)
+
+### Limitations
+
+Because of browser limitations, we can only detect the Caps Lock state after a KeyboardEvent
+or a MouseEvent. We currently detect updates to the Caps Lock state when the following events are fired:
+
+- keydown
+- keyup
+- mousedown
+- mousemove
+- wheel
+
+Before any of these events are fired, Caps Lock state is off.
+
 ### Credits
 
 Created by [Leon](https://github.com/Leonabcd123) and [fehmer](https://github.com/fehmer).
