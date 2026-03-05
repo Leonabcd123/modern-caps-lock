@@ -5,9 +5,8 @@
  * @returns Whether the user is running that operating system or not
  */
 function isPlatform(osName: RegExp): boolean {
-  // @ts-expect-error userAgentData is experimental, only supported on Chrome/Edge/Opera.
-  // Fallback to navigator.oscpu which is only supported on Firefox.
-  // Fallback to navigator.userAgent and navigator.platform for other browsers.
+  // @ts-expect-error userAgentData is experimental, only supported on Chrome/Edge/Opera. Treat it as a source of truth when available.
+  // Fallback to navigator.oscpu (which is only supported on Firefox), navigator.userAgent and navigator.platform. If any of them contain osName return true.
   return osName.test(navigator.userAgentData?.platform ?? (navigator.oscpu || navigator.userAgent || navigator.platform));
 }
 
