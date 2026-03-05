@@ -89,10 +89,10 @@ document.addEventListener("keyup", (event) => {
       // We check whether getCapsLockModifierState has ever returned true.
       // When Caps Lock is pressed handle it the same as on macOS.
       const currentCapsState = getCapsLockModifierState(event);
-      isSendingCapsLockStateOniPad ||= currentCapsState;
-      if (isSendingCapsLockStateOniPad) {
+      if (isSendingCapsLockStateOniPad || currentCapsState) {
         // macOS sends correct state on keyup.
         capsState = currentCapsState;
+	isSendingCapsLockStateOniPad = true;
       }
     }
   } else if (os === "Windows") {
