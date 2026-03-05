@@ -85,10 +85,9 @@ document.addEventListener("keyup", (event) => {
       capsState = false;
     } else {
       // iPad's default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
-      // So don't update (as a default) Caps Lock state on any keypress which isn't Caps Lock.
+      // So to decide whether to ignore Caps Lock state on other keypresses or not,
+      // We check whether getCapsLockModifierState has ever returned true.
       // When Caps Lock is pressed handle it the same as on macOS.
-      // To decide whether to ignore Caps Lock state on other keypresses or not on iPad,
-      // We check whether we've previously received a modifier state with the value true.
       const currentCapsState = getCapsLockModifierState(event);
       isSendingCapsLockStateOniPad ||= currentCapsState;
       if (isSendingCapsLockStateOniPad) {
