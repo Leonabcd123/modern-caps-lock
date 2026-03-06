@@ -5,9 +5,16 @@
  * @returns Whether the user is running that operating system or not
  */
 function isPlatform(osName: RegExp): boolean {
-  // @ts-expect-error userAgentData is experimental, only supported on Chrome/Edge/Opera. Treat it as a source of truth when available.
-  // Fallback to navigator.oscpu (which is only supported on Firefox), navigator.userAgent and navigator.platform. If any of them contain osName return true.
-  return osName.test(navigator.userAgentData?.platform ?? (navigator.oscpu || navigator.userAgent || navigator.platform));
+  /*
+   * navigator.userAgentData is experimental, only supported on Chrome/Edge/Opera. Treat it as a source of truth when available.
+   * Fallback to navigator.oscpu (which is only supported on Firefox), navigator.userAgent and navigator.platform. If any of them contain osName return true.
+   */
+  return osName.test(
+    // @ts-expect-error navigator.userAgentData is only supported on Chrome/Edge/Opera.
+    navigator.userAgentData?.platform ??
+      // @ts-expect-error navigator.oscpu is only supported on Firefox.
+      (navigator.oscpu || navigator.userAgent || navigator.platform),
+  );
 }
 
 /**
@@ -36,9 +43,11 @@ let onCapsChangeCallback: OnCapsChangeCallback;
 // All events that fire a MouseEvent that we want to update capsState when they're fired.
 const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"];
 const isiPad = os === "Mac" && navigator.maxTouchPoints > 1;
-// This determines whether we ignore the result of getCapsLockModifierState or not when receiving a keyup event for a key which isn't Caps Lock on iPad.
-// This is because iPad with default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
-// But macOS (on desktop) and iPad with external keyboard do send Caps Lock state.
+/*
+ * This determines whether we ignore the result of getCapsLockModifierState or not when receiving a keyup event for a key which isn't Caps Lock on iPad.
+ * This is because iPad with default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
+ * But macOS (on desktop) and iPad with external keyboard do send Caps Lock state.
+ */
 let isSendingCapsLockStateOniPad = !isiPad;
 
 /**
@@ -60,9 +69,11 @@ function callCallbackIfNeeded(): void {
  * @returns The current Caps Lock state.
  */
 function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
-  // Autofill in Chrome/Edge can send type Event that will still trigger the keydown and keyup event listeners.
-  // Type Event doesn't have the getModifierState method (only KeyboardEvent and MouseEvent do), so use optional chaining when calling getModifierState.
-  // See https://github.com/microsoft/monaco-editor/issues/4325
+  /*
+   * Autofill in Chrome/Edge can send type Event that will still trigger the keydown and keyup event listeners.
+   * Type Event doesn't have the getModifierState method (only KeyboardEvent and MouseEvent do), so use optional chaining when calling getModifierState.
+   * See https://github.com/microsoft/monaco-editor/issues/4325
+   */
   return event.getModifierState?.("CapsLock") ?? capsState;
 }
 
@@ -84,15 +95,17 @@ document.addEventListener("keyup", (event) => {
     if (event.key === "CapsLock") {
       capsState = false;
     } else {
-      // iPad's default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
-      // So to decide whether to ignore Caps Lock state on other keypresses or not,
-      // We check whether getCapsLockModifierState has ever returned true.
-      // When Caps Lock is pressed handle it the same as on macOS.
+      /*
+       * iPad's default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
+       * So to decide whether to ignore Caps Lock state on other keypresses or not,
+       * We check whether getCapsLockModifierState has ever returned true.
+       * When Caps Lock is pressed handle it the same as on macOS.
+       */
       const currentCapsState = getCapsLockModifierState(event);
       if (isSendingCapsLockStateOniPad || currentCapsState) {
         // macOS sends correct state on keyup.
         capsState = currentCapsState;
-	isSendingCapsLockStateOniPad = true;
+        isSendingCapsLockStateOniPad = true;
       }
     }
   } else if (os === "Windows") {
@@ -113,7 +126,8 @@ document.addEventListener("keydown", (event) => {
       callCallbackIfNeeded();
     }
   } else if (os === "Linux") {
-    /* Linux sends the correct state before Caps Lock is toggled only on keydown,
+    /*
+     * Linux sends the correct state before Caps Lock is toggled only on keydown,
      * so we invert the modifier state.
      */
     if (event.key === "CapsLock") {
