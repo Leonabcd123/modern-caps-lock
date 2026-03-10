@@ -12,7 +12,7 @@ npm install @leonabcd123/modern-caps-lock
 
 ### API
 
-#### onCapsLockChange()
+#### onCapsLockChange
 
 Runs the provided callback function whenever Caps Lock state is changed.
 
@@ -24,7 +24,7 @@ Runs the provided callback function whenever Caps Lock state is changed.
 
 `void`.
 
-#### isCapsLockOn()
+#### isCapsLockOn
 
 Returns the current Caps Lock state.
 
