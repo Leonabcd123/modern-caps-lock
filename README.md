@@ -62,14 +62,14 @@ if (isCapsLockOn()) {
 
 ### Support
 
-##### Supported Platforms:
+##### Supported Platforms
 
 - Windows
 - Mac
 - Linux
 - iPad
 
-##### Unsupported Platforms:
+##### Unsupported Platforms
 
 - Platforms using [GBoard](https://en.wikipedia.org/wiki/Gboard)
 
