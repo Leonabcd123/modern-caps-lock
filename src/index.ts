@@ -48,7 +48,7 @@ const isiPad = os === "Mac" && navigator.maxTouchPoints > 1;
  * This is because iPad with default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
  * But macOS (on desktop) and iPad with external keyboard do send Caps Lock state.
  */
-let isSendingCapsLockStateOniPad = !isiPad;
+let isSendingCapsLockState = !isiPad;
 
 /**
  * Calls the previously provided callback function when Caps Lock state changes.
@@ -102,10 +102,10 @@ document.addEventListener("keyup", (event) => {
        * When Caps Lock is pressed handle it the same as on macOS.
        */
       const currentCapsState = getCapsLockModifierState(event);
-      if (isSendingCapsLockStateOniPad || currentCapsState) {
+      if (isSendingCapsLockState || currentCapsState) {
         // macOS sends correct state on keyup.
         capsState = currentCapsState;
-        isSendingCapsLockStateOniPad = true;
+        isSendingCapsLockState = true;
       }
     }
   } else if (os === "Windows") {
