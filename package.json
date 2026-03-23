@@ -29,7 +29,7 @@
   "contributors": [
     "fehmer"
   ],
-  "license": "GPL-3.0-only",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/Leonabcd123/modern-caps-lock/issues"
   },
