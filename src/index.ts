@@ -44,11 +44,11 @@ function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
 
 mouseEventsToUpdateOn.forEach((eventType) => {
   document.addEventListener(eventType, (event: MouseEvent) => {
-      // All platforms except iPad send correct state on MouseEvent.
-      if (!isiPad) {
-        capsState = getCapsLockModifierState(event);
-        callCallbackIfNeeded();
-      }
+    // All platforms except iPad send correct state on MouseEvent.
+    if (!isiPad) {
+      capsState = getCapsLockModifierState(event);
+      callCallbackIfNeeded();
+    }
   });
 });
 
