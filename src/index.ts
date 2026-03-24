@@ -6,7 +6,7 @@ const os = getCurrentOs();
 type OnCapsChangeCallback = (capsState: boolean) => void;
 let onCapsChangeCallback: OnCapsChangeCallback;
 // All events that fire a MouseEvent that we want to update capsState when they're fired.
-const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"];
+const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"] as const;
 const isiPad = os === "Mac" && navigator.maxTouchPoints > 1;
 /*
  * This determines whether we ignore the result of getCapsLockModifierState or not when receiving a keyup event for a key which isn't Caps Lock on iPad.
@@ -44,13 +44,11 @@ function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
 
 mouseEventsToUpdateOn.forEach((eventType) => {
   document.addEventListener(eventType, (event) => {
-    if (event instanceof MouseEvent) {
       // All platforms except iPad send correct state on MouseEvent.
       if (!isiPad) {
         capsState = getCapsLockModifierState(event);
         callCallbackIfNeeded();
       }
-    }
   });
 });
 
