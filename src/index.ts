@@ -5,13 +5,13 @@ let capsState = false;
 const os = getCurrentOs();
 type OnCapsChangeCallback = (capsState: boolean) => void;
 let onCapsChangeCallback: OnCapsChangeCallback;
-// All events that fire a MouseEvent that we want to update capsState when they're fired.
+// All events that fire a MouseEvent for which we want to update capsState.
 const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"] as const;
 const isiPad = os === "Mac" && navigator.maxTouchPoints > 1;
 /*
  * This determines whether we ignore the result of getCapsLockModifierState or not when receiving a keyup event for a key which isn't Caps Lock on iPad.
- * This is because iPad with default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
- * But macOS (on desktop) and iPad with external keyboard do send Caps Lock state.
+ * This is because an iPad with the default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock.
+ * However, macOS (on desktop) and an iPad with external keyboard do send Caps Lock state.
  */
 let isSendingCapsLockState = !isiPad;
 
@@ -59,10 +59,10 @@ document.addEventListener("keyup", (event) => {
       capsState = false;
     } else {
       /*
-       * iPad's default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
-       * So to decide whether to ignore Caps Lock state on other keypresses or not,
+       * The iPad's default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
+       * So to decide whether to ignore Caps Lock state on other keypresses,
        * We check whether getCapsLockModifierState has ever returned true.
-       * When Caps Lock is pressed handle it the same as on macOS.
+       * When Caps Lock is pressed, handle it the same as on macOS.
        */
       const currentCapsState = getCapsLockModifierState(event);
       if (isSendingCapsLockState || currentCapsState) {
@@ -75,7 +75,7 @@ document.addEventListener("keyup", (event) => {
     // Windows always sends the correct state on keyup (for Caps Lock and for regular keys).
     capsState = getCapsLockModifierState(event);
   } else if (event.key !== "CapsLock") {
-    // Linux sends the correct state on keyup if key isn't Caps Lock.
+    // Linux sends the correct state on keyup if the key isn't Caps Lock.
     capsState = getCapsLockModifierState(event);
   }
   callCallbackIfNeeded();
