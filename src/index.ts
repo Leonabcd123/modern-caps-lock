@@ -5,7 +5,7 @@ let capsState = false;
 const os = getCurrentOs();
 type OnCapsChangeCallback = (capsState: boolean) => void;
 let onCapsChangeCallback: OnCapsChangeCallback;
-// All events that fire a MouseEvent for which we want to update capsState.
+// All events that fire a MouseEvent (or events that inherit from MouseEvent, such as WheelEvent) for which we want to update capsState.
 const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"] as const;
 const isiPad = os === "Mac" && navigator.maxTouchPoints > 1;
 /*
