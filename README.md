@@ -1,6 +1,6 @@
 # Modern Caps Lock
 
-Modern Caps Lock provides an easy way to check whether Caps Lock is active or not, and it allows you to run your code whenever Caps Lock state changes.
+Modern Caps Lock provides an easy way to check whether Caps Lock is active, and it allows you to run your code whenever the Caps Lock state changes.
 
 1. [Installation](#installation)
 2. [API](#api)
@@ -13,11 +13,11 @@ Modern Caps Lock provides an easy way to check whether Caps Lock is active or no
 3. [Examples](#examples)
    1. [Print Caps Lock state after every change](#print-caps-lock-state-after-every-change)
    2. [Get current Caps Lock state](#get-current-caps-lock-state)
-5. [Support](#support)
+4. [Support](#support)
    1. [Supported Platforms](#supported-platforms)
    2. [Unsupported Platforms](#unsupported-platforms)
-6. [Limitations](#limitations)
-7. [Credits](#credits)
+5. [Limitations](#limitations)
+6. [Credits](#credits)
 
 ### Installation
 
@@ -31,7 +31,7 @@ npm install @leonabcd123/modern-caps-lock
 
 #### onCapsLockChange
 
-Runs the provided callback function whenever Caps Lock state is changed.
+Runs the provided callback function whenever the Caps Lock state changes.
 
 ##### Arguments
 
@@ -51,7 +51,7 @@ None.
 
 ##### Return value
 
-`capsState: boolean`: a boolean representing the current Caps Lock state. If `true`, Caps Lock is on; if `false`, Caps Lock is off.
+`capsState: boolean`: a boolean indicating whether Caps Lock is on. If `true`, Caps Lock is on; if `false`, Caps Lock is off.
 
 
 ### Examples
@@ -93,7 +93,7 @@ if (isCapsLockOn()) {
 ### Limitations
 
 Because of browser limitations, we can only detect the Caps Lock state after a KeyboardEvent
-or a MouseEvent. We currently detect updates to the Caps Lock state when the following events are fired:
+or MouseEvent occurs. We currently detect updates to the Caps Lock state when the following events are fired:
 
 - keydown
 - keyup
@@ -101,7 +101,7 @@ or a MouseEvent. We currently detect updates to the Caps Lock state when the fol
 - mousemove
 - wheel
 
-Before any of these events are fired, Caps Lock state is off.
+Until one of these events is fired, the Caps Lock state defaults to `false`.
 
 ### Credits
 
