@@ -26,7 +26,7 @@ export function getCurrentOs(): "Mac" | "Linux" | "Windows" | "Unknown" {
   if (isPlatform(/Mac/i)) {
     return "Mac";
   }
-  if (isPlatform(/Linux/i)) {
+  if (isPlatform(/Linux|Android/i)) {
     return "Linux";
   }
   if (isPlatform(/Win/i)) {

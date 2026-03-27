@@ -74,7 +74,9 @@ document.addEventListener("keyup", (event) => {
   } else if (os === "Windows") {
     // Windows always sends the correct state on keyup (for Caps Lock and for regular keys).
     capsState = getCapsLockModifierState(event);
-  } else if (event.key !== "CapsLock") {
+  } else if (event.key !== "CapsLock" && event.key !== "Unidentified") {
+    // Check whether key is Unidentified because GBoard sends Unidentified keypresses
+    // Which don't have Caps State.
     // Linux sends the correct state on keyup if the key isn't Caps Lock.
     capsState = getCapsLockModifierState(event);
   }

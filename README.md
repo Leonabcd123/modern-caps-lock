@@ -13,9 +13,7 @@ Modern Caps Lock provides an easy way to check whether Caps Lock is active, and 
 3. [Examples](#examples)
    1. [Print Caps Lock state after every change](#print-caps-lock-state-after-every-change)
    2. [Get current Caps Lock state](#get-current-caps-lock-state)
-4. [Support](#support)
-   1. [Supported Platforms](#supported-platforms)
-   2. [Unsupported Platforms](#unsupported-platforms)
+4. [Supported Platforms](#supported-platforms)
 5. [Limitations](#limitations)
 6. [Credits](#credits)
 
@@ -77,18 +75,13 @@ if (isCapsLockOn()) {
 }
 ```
 
-### Support
-
-##### Supported Platforms
+### Supported Platforms
 
 - Windows
 - Mac
 - Linux
 - iPad
-
-##### Unsupported Platforms
-
-- Platforms using [GBoard](https://en.wikipedia.org/wiki/Gboard)
+- Android
 
 ### Limitations
 
