@@ -20,6 +20,9 @@ function isPlatform(osName: RegExp): boolean {
 /**
  * Gets the user's current operating system.
  *
+ * @remarks
+ * iPad is treated as Mac, and Android is treated as Linux.
+ *
  * @returns The operating system the user is running
  */
 export function getCurrentOs(): "Mac" | "Linux" | "Windows" | "Unknown" {
