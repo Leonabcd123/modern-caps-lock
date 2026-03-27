@@ -13,7 +13,7 @@ function isPlatform(osName: RegExp): boolean {
     // @ts-expect-error navigator.userAgentData is only supported on Chrome/Edge/Opera.
     navigator.userAgentData?.platform ??
       // @ts-expect-error navigator.oscpu is only supported on Firefox.
-      (navigator.oscpu || navigator.userAgent || navigator.platform),
+      (navigator.oscpu ?? "") + navigator.userAgent + navigator.platform,
   );
 }
 
