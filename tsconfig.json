@@ -3,6 +3,7 @@
     "target": "es6",
     "module": "esnext",
     "moduleResolution": "bundler",
+    "rewriteRelativeImportExtensions": true,
     "outDir": "./lib",
     "rootDir": "./src", 
     "strict": true,

@@ -1,4 +1,4 @@
-import { getCurrentOs } from "./os-detection";
+import { getCurrentOs } from "./os-detection.ts";
 
 let previousCapsState = false;
 let capsState = false;
