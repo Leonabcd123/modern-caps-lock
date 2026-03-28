@@ -3,12 +3,27 @@
     "target": "es6",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "rewriteRelativeImportExtensions": true,
     "outDir": "./lib",
     "rootDir": "./src", 
-    "strict": true,
+
     "removeComments": true,
-    "declaration": true
+    "declaration": true,
+
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "rewriteRelativeImportExtensions": true,
+    "moduleDetection": "force",
+    "noUncheckedSideEffectImports": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true
   },
   "include": ["src/**/*"]
 }
