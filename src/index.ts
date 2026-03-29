@@ -7,10 +7,9 @@ type OnCapsChangeCallback = (capsState: boolean) => void;
 let onCapsChangeCallback: OnCapsChangeCallback;
 // All events that fire a MouseEvent (or events that inherit from MouseEvent, such as WheelEvent) for which we want to update capsState.
 const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"] as const;
-const isiPad =
-  os === "Mac" &&
-  // @ts-expect-error navigator.userAgentData is only supported on Chrome/Edge/Opera.
-  (navigator.userAgentData?.mobile ?? navigator.maxTouchPoints > 1);
+// @ts-expect-error navigator.userAgentData is only supported on Chrome/Edge/Opera.
+const isMobile = navigator.userAgentData?.mobile ?? navigator.maxTouchPoints > 1;
+const isiPad = os === "Mac" && isMobile;
 /*
  * This determines whether we ignore the result of getCapsLockModifierState or not when receiving a keyup event for a key which isn't Caps Lock on iPad.
  * This is because an iPad with the default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock.
@@ -47,10 +46,16 @@ function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
 
 mouseEventsToUpdateOn.forEach((eventType) => {
   document.addEventListener(eventType, (event: MouseEvent) => {
-    // All platforms except iPad send correct state on MouseEvent.
+    // All platforms except iPad and Android send correct state on MouseEvent.
     if (!isiPad) {
-      capsState = getCapsLockModifierState(event);
-      callCallbackIfNeeded();
+      const currentCapsState = getCapsLockModifierState(event);
+      // If Android sends Caps State: off, we allow that, because that means it's using
+      // Virtual keyboard. When using external keyboard, Android will always send Caps
+      // State: on when MouseEvent is fired.
+      if (!isMobile || !currentCapsState) {
+        capsState = currentCapsState;
+        callCallbackIfNeeded();
+      }
     }
   });
 });
