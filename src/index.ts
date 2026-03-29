@@ -7,7 +7,10 @@ type OnCapsChangeCallback = (capsState: boolean) => void;
 let onCapsChangeCallback: OnCapsChangeCallback;
 // All events that fire a MouseEvent (or events that inherit from MouseEvent, such as WheelEvent) for which we want to update capsState.
 const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"] as const;
-const isiPad = os === "Mac" && navigator.maxTouchPoints > 1;
+const isiPad =
+  os === "Mac" &&
+  // @ts-expect-error navigator.userAgentData is only supported on Chrome/Edge/Opera.
+  (navigator.userAgentData?.mobile ?? navigator.maxTouchPoints > 1);
 /*
  * This determines whether we ignore the result of getCapsLockModifierState or not when receiving a keyup event for a key which isn't Caps Lock on iPad.
  * This is because an iPad with the default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock.
