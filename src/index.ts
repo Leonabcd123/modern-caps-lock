@@ -4,7 +4,7 @@ let previousCapsState = false;
 let capsState = false;
 const os = getCurrentOs();
 type OnCapsChangeCallback = (capsState: boolean) => void;
-let onCapsChangeCallback: OnCapsChangeCallback;
+let onCapsChangeCallbacks: OnCapsChangeCallback[] = [];
 // All events that fire a MouseEvent (or events that inherit from MouseEvent, such as WheelEvent) for which we want to update capsState.
 const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"] as const;
 // @ts-expect-error navigator.userAgentData is only supported on Chrome/Edge/Opera.
@@ -24,8 +24,7 @@ function callCallbackIfNeeded(): void {
   const callCallback = previousCapsState !== capsState;
   previousCapsState = capsState;
   if (callCallback) {
-    // We're using optional chaining here because onCapsChangeCallback is undefined when onCapsLockChange isn't used.
-    onCapsChangeCallback?.(capsState);
+    onCapsChangeCallbacks.forEach((callback) => callback(capsState));
   }
 }
 
@@ -124,5 +123,5 @@ export function isCapsLockOn(): boolean {
  * @param callback - The callback function
  */
 export function onCapsLockChange(callback: OnCapsChangeCallback): void {
-  onCapsChangeCallback = callback;
+  onCapsChangeCallbacks.push(callback);
 }
