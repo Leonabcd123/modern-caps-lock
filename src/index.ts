@@ -4,7 +4,7 @@ let previousCapsState = false;
 let capsState = false;
 const os = getCurrentOs();
 type OnCapsChangeCallback = (capsState: boolean) => void;
-let onCapsChangeCallbacks: OnCapsChangeCallback[] = [];
+const onCapsChangeCallbacks: OnCapsChangeCallback[] = [];
 // All events that fire a MouseEvent (or events that inherit from MouseEvent, such as WheelEvent) for which we want to update capsState.
 const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"] as const;
 // @ts-expect-error navigator.userAgentData is only supported on Chrome/Edge/Opera.
