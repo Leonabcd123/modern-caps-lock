@@ -83,7 +83,7 @@ if (isCapsLockOn()) {
 
 - Windows
 - Mac
-- Linux
+- Linux (excluding Firefox on X11/Xwayland)
 - iPad
 - Platforms using GBoard
 
