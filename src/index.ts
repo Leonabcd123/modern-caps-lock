@@ -127,9 +127,8 @@ document.addEventListener("keydown", (event) => {
        *
        * 1. Enable Caps Lock
        * 2. Press and hold Caps Lock
-       * 3. Press and hold another key
-       * 4. Release the other key
-       * 5. Release Caps Lock
+       * 3. Press another key and release it
+       * 4. Release Caps Lock
        *
        * Without deferring, this would cause `capsState` to stay `true`, because the
        * change made here would be overridden by the change to the Caps Lock state when
