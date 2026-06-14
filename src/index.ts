@@ -17,6 +17,7 @@ const isiPad = os === "Mac" && isMobile;
  * However, macOS (on desktop) and an iPad with external keyboard do send Caps Lock state.
  */
 let isSendingCapsLockState = !isiPad;
+const afterKeyup = new Map();
 
 /**
  * Calls the previously provided callback function when Caps Lock state changes.
@@ -61,6 +62,14 @@ mouseEventsToUpdateOn.forEach((eventType) => {
 });
 
 document.addEventListener("keyup", (event) => {
+  const setAfterKeyupValue = afterKeyup.get(event.code);
+  if (setAfterKeyupValue !== undefined) {
+    capsState = setAfterKeyupValue;
+    callCallbackIfNeeded();
+    afterKeyup.delete(event.code);
+    return;
+  }
+
   if (os === "Mac") {
     // macOS sends only keydown when enabling Caps Lock and only keyup when disabling.
     if (event.key === "CapsLock") {
@@ -113,7 +122,22 @@ document.addEventListener("keydown", (event) => {
      * Wayland, so it's also supported.
      */
     if (event.key === "CapsLock") {
-      capsState = !getCapsLockModifierState(event);
+      /* Defer change to be ran when Caps Lock is released. This is to prevent the
+       * following case from returning an incorrect value:
+       *
+       * 1. Enable Caps Lock
+       * 2. Press and hold Caps Lock
+       * 3. Press and hold another key
+       * 4. Release the other key
+       * 5. Release Caps Lock
+       *
+       * Without deferring, this would cause `capsState` to stay `true`, because the
+       * change made here would be overridden by the change to the Caps Lock state when
+       * the other key releases. Deferring the change makes it run after the other key
+       * releases and changes the Caps Lock state.
+       */
+
+      afterKeyup.set(event.code, !getCapsLockModifierState(event));
     }
   }
 });
