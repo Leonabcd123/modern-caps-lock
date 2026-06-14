@@ -100,14 +100,17 @@ document.addEventListener("keydown", (event) => {
     }
   } else if (os === "Linux") {
     /*
-     * Linux with Wayland sends the correct Caps Lock state before toggling Caps Lock
+     * Linux on Wayland sends the correct Caps Lock state before toggling Caps Lock
      * on keydown, so we invert the Caps Lock state to get the state after the toggle.
-     * On keyup, Linux with Wayland always sends `true` for Caps Lock state.
+     * On keyup, Linux on Wayland always sends `true` for Caps Lock state.
      *
-     * Linux with X11/Xwayland sends the correct Caps Lock state for all keys on keyup
-     * and always sends `true` for Caps Lock state on keydown. Unfortunately, we can't
-     * differentiate between Wayland and X11/Xwayland, so we currently only support
-     * Wayland.
+     * Linux with Firefox on X11/Xwayland sends the correct Caps Lock state for all keys
+     * on keyup and always sends `true` for Caps Lock state on keydown. Unfortunately,
+     * we can't differentiate between Wayland and X11/Xwayland, so we currently only
+     * support Wayland.
+     *
+     * Linux with Chromium on X11/Xwayland has the same Caps Lock behavior as Linux on
+     * Wayland, so it's also supported.
      */
     if (event.key === "CapsLock") {
       capsState = !getCapsLockModifierState(event);
