@@ -1,6 +1,5 @@
 import { getCurrentOs } from "./os-detection.js";
 
-let previousCapsState = false;
 let capsState = false;
 const os = getCurrentOs();
 type OnCapsChangeCallback = (capsState: boolean) => void;
@@ -20,12 +19,12 @@ let isSendingCapsLockState = !isiPad;
 const afterKeyup = new Map();
 
 /**
- * Calls the previously provided callback function when Caps Lock state changes.
+ * Sets the Caps Lock state and calls the previously provided callback function if Caps Lock
+ * state has changed.
  */
-function callCallbackIfNeeded(): void {
-  const callCallback = previousCapsState !== capsState;
-  previousCapsState = capsState;
-  if (callCallback) {
+function setCapsState(newCapsState: boolean): void {
+  if (capsState !== newCapsState) {
+    capsState = newCapsState;
     onCapsChangeCallbacks.forEach((callback) => callback(capsState));
   }
 }
@@ -54,8 +53,7 @@ mouseEventsToUpdateOn.forEach((eventType) => {
       // Virtual keyboard. When using external keyboard, Android will always send Caps
       // State: on when MouseEvent is fired.
       if (!isMobile || !currentCapsState) {
-        capsState = currentCapsState;
-        callCallbackIfNeeded();
+        setCapsState(currentCapsState);
       }
     }
   });
@@ -64,46 +62,44 @@ mouseEventsToUpdateOn.forEach((eventType) => {
 document.addEventListener("keyup", (event) => {
   const setAfterKeyupValue = afterKeyup.get(event.code);
   if (setAfterKeyupValue !== undefined) {
-    capsState = setAfterKeyupValue;
+    setCapsState(setAfterKeyupValue);
     afterKeyup.delete(event.code);
-  } else {
-    if (os === "Mac") {
-      // macOS sends only keydown when enabling Caps Lock and only keyup when disabling.
-      if (event.key === "CapsLock") {
-        capsState = false;
-      } else {
-        /*
-         * The iPad's default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
-         * So to decide whether to ignore Caps Lock state on other keypresses,
-         * We check whether getCapsLockModifierState has ever returned true.
-         * When Caps Lock is pressed, handle it the same as on macOS.
-         */
-        const currentCapsState = getCapsLockModifierState(event);
-        if (isSendingCapsLockState || currentCapsState) {
-          // macOS sends correct state on keyup.
-          capsState = currentCapsState;
-          isSendingCapsLockState = true;
-        }
-      }
-    } else if (os === "Windows") {
-      // Windows always sends the correct state on keyup (for Caps Lock and for regular keys).
-      capsState = getCapsLockModifierState(event);
-    } else if (event.key !== "CapsLock" && event.key !== "Unidentified") {
-      // Check whether key is Unidentified because GBoard sends Unidentified keypresses
-      // Which don't have Caps State.
-      // Linux on Wayland and Linux with Chromium on X11/Xwayland send the correct Caps Lock state on keyup if the key isn't Caps Lock.
-      capsState = getCapsLockModifierState(event);
-    }
+    return;
   }
-  callCallbackIfNeeded();
+  if (os === "Mac") {
+    // macOS sends only keydown when enabling Caps Lock and only keyup when disabling.
+    if (event.key === "CapsLock") {
+      setCapsState(false);
+      return;
+    }
+    /*
+     * The iPad's default virtual keyboard doesn't send Caps Lock state on any keypress which isn't Caps Lock,
+     * So to decide whether to ignore Caps Lock state on other keypresses,
+     * We check whether getCapsLockModifierState has ever returned true.
+     * When Caps Lock is pressed, handle it the same as on macOS.
+     */
+    const currentCapsState = getCapsLockModifierState(event);
+    if (isSendingCapsLockState || currentCapsState) {
+      // macOS sends correct state on keyup.
+      setCapsState(currentCapsState);
+      isSendingCapsLockState = true;
+    }
+  } else if (os === "Windows") {
+    // Windows always sends the correct state on keyup (for Caps Lock and for regular keys).
+    setCapsState(getCapsLockModifierState(event));
+  } else if (event.key !== "CapsLock" && event.key !== "Unidentified") {
+    // Check whether key is Unidentified because GBoard sends Unidentified keypresses
+    // Which don't have Caps State.
+    // Linux on Wayland and Linux with Chromium on X11/Xwayland send the correct Caps Lock state on keyup if the key isn't Caps Lock.
+    setCapsState(getCapsLockModifierState(event));
+  }
 });
 
 document.addEventListener("keydown", (event) => {
   if (os === "Mac") {
     // macOS sends only keydown when enabling Caps Lock and only keyup when disabling.
     if (event.key === "CapsLock") {
-      capsState = true;
-      callCallbackIfNeeded();
+      setCapsState(true);
     }
   } else if (os === "Linux") {
     /*
