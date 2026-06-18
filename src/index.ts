@@ -84,9 +84,6 @@ document.addEventListener("keyup", (event) => {
       setCapsState(currentCapsState);
       isSendingCapsLockState = true;
     }
-  } else if (os === "Windows") {
-    // Windows always sends the correct state on keyup (for Caps Lock and for regular keys).
-    setCapsState(getCapsLockModifierState(event));
   } else if (event.key !== "CapsLock" && event.key !== "Unidentified") {
     // Check whether key is Unidentified because GBoard sends Unidentified keypresses
     // Which don't have Caps State.
@@ -96,7 +93,14 @@ document.addEventListener("keyup", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (os === "Mac") {
+  if (afterKeyup.get(event.code) !== undefined) {
+    afterKeyup.delete(event.code);
+  }
+
+  if (os === "Windows") {
+    // Windows always sends the correct Caps Lock state on keydown (for Caps Lock and for regular keys).
+    setCapsState(getCapsLockModifierState(event));
+  } else if (os === "Mac") {
     // macOS sends only keydown when enabling Caps Lock and only keyup when disabling.
     if (event.key === "CapsLock") {
       setCapsState(true);
@@ -117,21 +121,27 @@ document.addEventListener("keydown", (event) => {
      * Wayland, so it's also supported.
      */
     if (event.key === "CapsLock") {
-      /* Defer change to be ran when Caps Lock is released. This is to prevent the
-       * following case from returning an incorrect value:
-       *
-       * 1. Enable Caps Lock
-       * 2. Press and hold Caps Lock
-       * 3. Press another key and release it
-       * 4. Release Caps Lock
-       *
-       * Without deferring, this would cause `capsState` to stay `true`, because the
-       * change made here would be overridden by the change to the Caps Lock state when
-       * the other key releases. Deferring the change makes it run after the other key
-       * releases and changes the Caps Lock state.
-       */
+      const flippedCapsState = !getCapsLockModifierState(event);
 
-      afterKeyup.set(event.code, !getCapsLockModifierState(event));
+      if (flippedCapsState) {
+        setCapsState(true);
+      } else {
+        /* Defer change to be ran when Caps Lock is disabled. This is to prevent the
+         * following case from returning an incorrect value:
+         *
+         * 1. Enable Caps Lock
+         * 2. Press and hold Caps Lock
+         * 3. Press another key and release it
+         * 4. Release Caps Lock
+         *
+         * Without deferring, this would cause `capsState` to stay `true`, because the
+         * change made here would be overridden by the change to the Caps Lock state when
+         * the other key releases. Deferring the change makes it run after the other key
+         * releases and changes the Caps Lock state.
+         */
+
+        afterKeyup.set(event.code, flippedCapsState);
+      }
     }
   }
 });
