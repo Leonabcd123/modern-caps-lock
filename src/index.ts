@@ -16,7 +16,7 @@ const isiPad = os === "Mac" && isMobile;
  * However, macOS (on desktop) and an iPad with external keyboard do send Caps Lock state.
  */
 let isSendingCapsLockState = !isiPad;
-const afterKeyup = new Map();
+const afterKeyup = new Map<string, boolean>();
 
 /**
  * Sets the Caps Lock state and calls the previously provided callback function if Caps Lock
