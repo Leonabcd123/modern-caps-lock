@@ -12,7 +12,9 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "typescript": "^5.9.0"
+    "happy-dom": "^20.10.6",
+    "typescript": "^5.9.0",
+    "vitest": "^4.1.10"
   },
   "repository": {
     "type": "git",
