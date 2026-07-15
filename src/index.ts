@@ -84,11 +84,16 @@ document.addEventListener("keyup", (event) => {
       setCapsState(currentCapsState);
       isSendingCapsLockState = true;
     }
-  } else if (event.key !== "CapsLock" && event.key !== "Unidentified") {
-    // Check whether key is Unidentified because GBoard sends Unidentified keypresses
-    // Which don't have Caps State.
-    // Linux on Wayland and Linux with Chromium on X11/Xwayland send the correct Caps Lock state on keyup if the key isn't Caps Lock.
+  } else if (os === "Windows") {
+    // Windows always sends the correct Caps Lock state on keyup (for Caps Lock and for regular keys).
     setCapsState(getCapsLockModifierState(event));
+  } else if (os === "Linux") {
+    if (event.key !== "CapsLock" && event.key !== "Unidentified") {
+      // Check whether key is Unidentified because GBoard sends Unidentified keypresses
+      // Which don't have Caps State.
+      // Linux on Wayland and Linux with Chromium on X11/Xwayland send the correct Caps Lock state on keyup if the key isn't Caps Lock.
+      setCapsState(getCapsLockModifierState(event));
+    }
   }
 });
 
