@@ -1,5 +1,7 @@
 import { getCurrentOs } from "./os-detection.js";
 
+const CAPS_LOCK = "CapsLock";
+
 let capsState = false;
 const os = getCurrentOs();
 type OnCapsChangeCallback = (capsState: boolean) => void;
@@ -42,7 +44,7 @@ function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
    * Type Event doesn't have the getModifierState method (only KeyboardEvent and MouseEvent do), so use optional chaining when calling getModifierState.
    * See https://github.com/microsoft/monaco-editor/issues/4325
    */
-  return event.getModifierState?.("CapsLock") ?? capsState;
+  return event.getModifierState?.(CAPS_LOCK) ?? capsState;
 }
 
 mouseEventsToUpdateOn.forEach((eventType) => {
@@ -61,7 +63,7 @@ mouseEventsToUpdateOn.forEach((eventType) => {
 });
 
 document.addEventListener("keyup", (event) => {
-  if (event.key === "CapsLock" && disableCapsOnCapsKeyup) {
+  if (event.key === CAPS_LOCK && disableCapsOnCapsKeyup) {
     setCapsState(false);
     disableCapsOnCapsKeyup = false;
     return;
@@ -74,7 +76,7 @@ document.addEventListener("keyup", (event) => {
       break;
     case "Mac":
       // macOS sends only keydown when enabling Caps Lock and only keyup when disabling.
-      if (event.key === "CapsLock") {
+      if (event.key === CAPS_LOCK) {
         setCapsState(false);
         return;
       }
@@ -94,7 +96,7 @@ document.addEventListener("keyup", (event) => {
       }
       break;
     case "Linux":
-      if (event.key !== "CapsLock" && event.key !== "Unidentified") {
+      if (event.key !== CAPS_LOCK && event.key !== "Unidentified") {
         // Check whether key is Unidentified because GBoard sends Unidentified keypresses
         // Which don't have Caps State.
         // Linux on Wayland and Linux with Chromium on X11/Xwayland send the correct Caps Lock state on keyup if the key isn't Caps Lock.
@@ -105,7 +107,7 @@ document.addEventListener("keyup", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "CapsLock" && disableCapsOnCapsKeyup) {
+  if (event.key === CAPS_LOCK && disableCapsOnCapsKeyup) {
     disableCapsOnCapsKeyup = false;
   }
 
@@ -117,7 +119,7 @@ document.addEventListener("keydown", (event) => {
       break;
     case "Mac":
       // macOS sends only keydown when enabling Caps Lock and only keyup when disabling.
-      if (event.key === "CapsLock") {
+      if (event.key === CAPS_LOCK) {
         setCapsState(true);
       }
 
@@ -137,7 +139,7 @@ document.addEventListener("keydown", (event) => {
        * Linux with Chromium on X11/Xwayland has the same Caps Lock behavior as Linux on
        * Wayland, so it's also supported.
        */
-      if (event.key === "CapsLock") {
+      if (event.key === CAPS_LOCK) {
         const flippedCapsState = !getCapsLockModifierState(event);
 
         if (flippedCapsState) {
