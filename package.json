@@ -9,12 +9,23 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "husky"
   },
   "devDependencies": {
     "happy-dom": "^20.10.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
+    "oxfmt": "^0.59.0",
+    "oxlint": "^1.74.0",
     "typescript": "^5.9.0",
     "vitest": "^4.1.10"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "oxfmt",
+      "oxlint"
+    ]
   },
   "repository": {
     "type": "git",
