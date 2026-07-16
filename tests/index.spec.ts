@@ -276,7 +276,7 @@ describe("caps-lock-state", () => {
 
     it("ignores unidentified keypresses on keyup", () => {
       dispatch(
-        keyEvent("keyup", { key: "Unidentified", capsLock: true }, true),
+        keyEvent("keyup", { key: "Unidentified", capsLock: true }),
       );
       expect(isCapsLockOn()).toBe(false);
 
@@ -284,7 +284,7 @@ describe("caps-lock-state", () => {
       expect(isCapsLockOn()).toBe(true);
 
       dispatch(
-        keyEvent("keyup", { key: "Unidentified", capsLock: false }, true),
+        keyEvent("keyup", { key: "Unidentified", capsLock: false }),
       );
       expect(isCapsLockOn()).toBe(true);
     });
