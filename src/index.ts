@@ -60,10 +60,10 @@ mouseEventsToUpdateOn.forEach((eventType) => {
 });
 
 document.addEventListener("keyup", (event) => {
-  const setAfterKeyupValue = afterKeyup.get(event.code);
+  const setAfterKeyupValue = afterKeyup.get(event.key);
   if (setAfterKeyupValue !== undefined) {
     setCapsState(setAfterKeyupValue);
-    afterKeyup.delete(event.code);
+    afterKeyup.delete(event.key);
     return;
   }
 
@@ -105,8 +105,8 @@ document.addEventListener("keyup", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (afterKeyup.get(event.code) !== undefined) {
-    afterKeyup.delete(event.code);
+  if (afterKeyup.get(event.key) !== undefined) {
+    afterKeyup.delete(event.key);
   }
 
   switch (os) {
@@ -157,7 +157,7 @@ document.addEventListener("keydown", (event) => {
            * releases and changes the Caps Lock state.
            */
 
-          afterKeyup.set(event.code, flippedCapsState);
+          afterKeyup.set(event.key, flippedCapsState);
         }
       }
       break;
