@@ -28,7 +28,7 @@ function setNavigator({ mobile, maxTouchPoints }: NavOpts): void {
 
 async function loadModule(
   os: Os,
-  navOpts: NavOpts = {}
+  navOpts: NavOpts = {},
 ): Promise<typeof import("../src/index.js")> {
   vi.resetModules();
   setNavigator(navOpts);
@@ -44,11 +44,13 @@ function keyEvent(
     key,
     capsLock = false,
     withModifierState = true,
-  }: { key: string; capsLock?: boolean; withModifierState?: boolean }
+  }: { key: string; capsLock?: boolean; withModifierState?: boolean },
 ): KeyboardEvent {
   const event = new KeyboardEvent(type, { key, bubbles: true });
   if (withModifierState) {
-    event.getModifierState = vi.fn((mod) => (mod === "CapsLock" ? capsLock : false));
+    event.getModifierState = vi.fn((mod) =>
+      mod === "CapsLock" ? capsLock : false,
+    );
   } else {
     // Simulate the autofill-sent `Event` that lacks getModifierState entirely.
     // @ts-expect-error deliberately removing the method
@@ -57,9 +59,14 @@ function keyEvent(
   return event;
 }
 
-function mouseEvent(type: "mousedown" | "mousemove" | "wheel", capsLock: boolean): MouseEvent {
+function mouseEvent(
+  type: "mousedown" | "mousemove" | "wheel",
+  capsLock: boolean,
+): MouseEvent {
   const event = new MouseEvent(type, { bubbles: true });
-  event.getModifierState = vi.fn((mod) => (mod === "CapsLock" ? capsLock : false));
+  event.getModifierState = vi.fn((mod) =>
+    mod === "CapsLock" ? capsLock : false,
+  );
   return event;
 }
 
@@ -173,7 +180,7 @@ describe("caps-lock-state", () => {
       expect(isCapsLockOn()).toBe(true);
 
       expect(() =>
-        dispatch(keyEvent("keydown", { key: "a", withModifierState: false }))
+        dispatch(keyEvent("keydown", { key: "a", withModifierState: false })),
       ).not.toThrow();
       expect(isCapsLockOn()).toBe(true);
     });
@@ -267,18 +274,20 @@ describe("caps-lock-state", () => {
       expect(isCapsLockOn()).toBe(true);
     });
 
-
     it("ignores unidentified keypresses on keyup", () => {
-      dispatch(keyEvent("keyup", { key: "Unidentified", capsLock: true }, true));
+      dispatch(
+        keyEvent("keyup", { key: "Unidentified", capsLock: true }, true),
+      );
       expect(isCapsLockOn()).toBe(false);
 
       dispatch(keyEvent("keyup", { key: "b", capsLock: true }));
       expect(isCapsLockOn()).toBe(true);
 
-      dispatch(keyEvent("keyup", { key: "Unidentified", capsLock: false }, true));
-      expect(isCapsLockOn()).toBe(true); 
+      dispatch(
+        keyEvent("keyup", { key: "Unidentified", capsLock: false }, true),
+      );
+      expect(isCapsLockOn()).toBe(true);
     });
- 
 
     it("does not trust a mouse event reporting caps lock ON", () => {
       dispatch(mouseEvent("mousedown", true));
@@ -292,7 +301,7 @@ describe("caps-lock-state", () => {
       dispatch(mouseEvent("mousedown", false));
       expect(isCapsLockOn()).toBe(false);
     });
- });
+  });
 
   describe("Unknown", () => {
     let isCapsLockOn: ModuleExports["isCapsLockOn"];
