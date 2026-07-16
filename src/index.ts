@@ -16,7 +16,8 @@ const isiPad = os === "Mac" && isMobile;
  * However, macOS (on desktop) and an iPad with external keyboard do send Caps Lock state.
  */
 let isSendingCapsLockState = !isiPad;
-const afterKeyup = new Map<string, boolean>();
+// On Linux, caps lock disabling is deferred to keyup.
+let disableCapsOnCapsKeyup = false;
 
 /**
  * Sets the Caps Lock state and calls the previously provided callback function if Caps Lock
@@ -60,10 +61,9 @@ mouseEventsToUpdateOn.forEach((eventType) => {
 });
 
 document.addEventListener("keyup", (event) => {
-  const setAfterKeyupValue = afterKeyup.get(event.key);
-  if (setAfterKeyupValue !== undefined) {
-    setCapsState(setAfterKeyupValue);
-    afterKeyup.delete(event.key);
+  if (event.key === "CapsLock" && disableCapsOnCapsKeyup) {
+    setCapsState(false);
+    disableCapsOnCapsKeyup = false;
     return;
   }
 
@@ -105,8 +105,8 @@ document.addEventListener("keyup", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (afterKeyup.get(event.key) !== undefined) {
-    afterKeyup.delete(event.key);
+  if (event.key === "CapsLock" && disableCapsOnCapsKeyup) {
+    disableCapsOnCapsKeyup = false;
   }
 
   switch (os) {
@@ -148,7 +148,7 @@ document.addEventListener("keydown", (event) => {
            * but we can only detect Caps Lock state on keydown, so we defer the state
            * to be updated on keyup, when Caps Lock is released.
            */
-          afterKeyup.set(event.key, flippedCapsState);
+          disableCapsOnCapsKeyup = true;
         }
       }
       break;
