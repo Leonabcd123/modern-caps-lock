@@ -143,20 +143,11 @@ document.addEventListener("keydown", (event) => {
         if (flippedCapsState) {
           setCapsState(true);
         } else {
-          /* Defer change to be ran when Caps Lock is disabled. This is to prevent the
-           * following case from returning an incorrect value:
-           *
-           * 1. Enable Caps Lock
-           * 2. Press and hold Caps Lock
-           * 3. Press another key and release it
-           * 4. Release Caps Lock
-           *
-           * Without deferring, this would cause `capsState` to stay `true`, because the
-           * change made here would be overridden by the change to the Caps Lock state when
-           * the other key releases. Deferring the change makes it run after the other key
-           * releases and changes the Caps Lock state.
+          /*
+           * When disabling Caps Lock on Linux, Caps Lock only actually disables when it's released (keyup),
+           * but we can only detect Caps Lock state on keydown, so we defer the state
+           * to be updated on keyup, when Caps Lock is released.
            */
-
           afterKeyup.set(event.key, flippedCapsState);
         }
       }
