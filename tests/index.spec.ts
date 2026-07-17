@@ -48,9 +48,7 @@ function keyEvent(
 ): KeyboardEvent {
   const event = new KeyboardEvent(type, { key, bubbles: true });
   if (withModifierState) {
-    event.getModifierState = vi.fn((mod) =>
-      mod === "CapsLock" ? capsLock : false,
-    );
+    event.getModifierState = vi.fn((mod) => (mod === "CapsLock" ? capsLock : false));
   } else {
     // Simulate the autofill-sent `Event` that lacks getModifierState entirely.
     // @ts-expect-error deliberately removing the method
@@ -59,14 +57,9 @@ function keyEvent(
   return event;
 }
 
-function mouseEvent(
-  type: "mousedown" | "mousemove" | "wheel",
-  capsLock: boolean,
-): MouseEvent {
+function mouseEvent(type: "mousedown" | "mousemove" | "wheel", capsLock: boolean): MouseEvent {
   const event = new MouseEvent(type, { bubbles: true });
-  event.getModifierState = vi.fn((mod) =>
-    mod === "CapsLock" ? capsLock : false,
-  );
+  event.getModifierState = vi.fn((mod) => (mod === "CapsLock" ? capsLock : false));
   return event;
 }
 
@@ -83,6 +76,17 @@ function expectMouseEventsToUpdateState(isCapsLockOn: () => boolean): void {
 
   dispatch(mouseEvent("wheel", true));
   expect(isCapsLockOn()).toBe(true);
+}
+
+function expectMouseEventsToNotUpdateState(isCapsLockOn: () => boolean): void {
+  dispatch(mouseEvent("mousedown", true));
+  expect(isCapsLockOn()).toBe(false);
+
+  dispatch(mouseEvent("mousemove", true));
+  expect(isCapsLockOn()).toBe(false);
+
+  dispatch(mouseEvent("wheel", true));
+  expect(isCapsLockOn()).toBe(false);
 }
 
 describe("caps-lock-state", () => {
@@ -251,14 +255,7 @@ describe("caps-lock-state", () => {
     });
 
     it("ignores mouse events entirely on iPad", () => {
-      dispatch(mouseEvent("mousedown", true));
-      expect(isCapsLockOn()).toBe(false);
-
-      dispatch(mouseEvent("mousemove", true));
-      expect(isCapsLockOn()).toBe(false);
-
-      dispatch(mouseEvent("wheel", true));
-      expect(isCapsLockOn()).toBe(false);
+      expectMouseEventsToNotUpdateState(isCapsLockOn);
     });
   });
 
@@ -275,17 +272,13 @@ describe("caps-lock-state", () => {
     });
 
     it("ignores unidentified keypresses on keyup", () => {
-      dispatch(
-        keyEvent("keyup", { key: "Unidentified", capsLock: true }),
-      );
+      dispatch(keyEvent("keyup", { key: "Unidentified", capsLock: true }));
       expect(isCapsLockOn()).toBe(false);
 
       dispatch(keyEvent("keyup", { key: "b", capsLock: true }));
       expect(isCapsLockOn()).toBe(true);
 
-      dispatch(
-        keyEvent("keyup", { key: "Unidentified", capsLock: false }),
-      );
+      dispatch(keyEvent("keyup", { key: "Unidentified", capsLock: false }));
       expect(isCapsLockOn()).toBe(true);
     });
 
@@ -324,6 +317,10 @@ describe("caps-lock-state", () => {
 
       dispatch(keyEvent("keyup", { key: "b", capsLock: true }));
       expect(isCapsLockOn()).toBe(false);
+    });
+
+    it("ignores mouse events", () => {
+      expectMouseEventsToNotUpdateState(isCapsLockOn);
     });
   });
 
