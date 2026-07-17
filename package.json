@@ -18,13 +18,14 @@
     "lint-staged": "^17.0.8",
     "oxfmt": "^0.59.0",
     "oxlint": "^1.74.0",
+    "oxlint-tsgolint": "^0.24.0",
     "typescript": "^5.9.0",
     "vitest": "^4.1.10"
   },
   "lint-staged": {
     "*.ts": [
-      "oxfmt",
-      "oxlint"
+      "oxfmt --no-error-on-unmatched-pattern",
+      "oxlint --type-aware --type-check"
     ]
   },
   "repository": {
