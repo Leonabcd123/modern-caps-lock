@@ -40,20 +40,10 @@ type ModuleExports = Awaited<ReturnType<typeof loadModule>>;
 
 function keyEvent(
   type: "keydown" | "keyup",
-  {
-    key,
-    capsLock = false,
-    withModifierState = true,
-  }: { key: string; capsLock?: boolean; withModifierState?: boolean },
+  { key, capsLock = false }: { key: string; capsLock?: boolean },
 ): KeyboardEvent {
   const event = new KeyboardEvent(type, { key, bubbles: true });
-  if (withModifierState) {
-    event.getModifierState = vi.fn((mod) => (mod === "CapsLock" ? capsLock : false));
-  } else {
-    // Simulate the autofill-sent `Event` that lacks getModifierState entirely.
-    // @ts-expect-error deliberately removing the method
-    event.getModifierState = undefined;
-  }
+  event.getModifierState = vi.fn((mod) => (mod === "CapsLock" ? capsLock : false));
   return event;
 }
 
@@ -179,13 +169,23 @@ describe("caps-lock-state", () => {
       expectMouseEventsToUpdateState(isCapsLockOn);
     });
 
-    it("falls back to the existing state when getModifierState is unavailable (autofill Event)", () => {
+    it("ignores an autofill-sent plain Event on keydown rather than throwing or altering state", () => {
       dispatch(keyEvent("keydown", { key: "a", capsLock: true }));
       expect(isCapsLockOn()).toBe(true);
 
-      expect(() =>
-        dispatch(keyEvent("keydown", { key: "a", withModifierState: false })),
-      ).not.toThrow();
+      expect(() => {
+        dispatch(new Event("keydown", { bubbles: true }));
+      }).not.toThrow();
+      expect(isCapsLockOn()).toBe(true);
+    });
+
+    it("ignores an autofill-sent plain Event on keyup rather than throwing or altering state", () => {
+      dispatch(keyEvent("keydown", { key: "a", capsLock: true }));
+      expect(isCapsLockOn()).toBe(true);
+
+      expect(() => {
+        dispatch(new Event("keyup", { bubbles: true }));
+      }).not.toThrow();
       expect(isCapsLockOn()).toBe(true);
     });
   });

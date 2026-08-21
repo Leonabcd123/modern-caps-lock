@@ -41,12 +41,7 @@ if (os !== "Unknown") {
    * @returns The current Caps Lock state.
    */
   function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
-    /*
-     * Autofill in Chrome/Edge can send type Event that will still trigger the keydown and keyup event listeners.
-     * Type Event doesn't have the getModifierState method (only KeyboardEvent and MouseEvent do), so use optional chaining when calling getModifierState.
-     * See https://github.com/microsoft/monaco-editor/issues/4325
-     */
-    return event.getModifierState?.(CAPS_LOCK) ?? capsState;
+    return event.getModifierState(CAPS_LOCK);
   }
 
   mouseEventsToUpdateOn.forEach((eventType) => {
@@ -64,7 +59,14 @@ if (os !== "Unknown") {
     });
   });
 
-  document.addEventListener("keyup", (event) => {
+  document.addEventListener("keyup", (event: Event) => {
+    /*
+     * Autofill in Chrome/Edge can send a keyup event of type Event that will still
+     * trigger the keyup event listener, but we only care about keyboard events.
+     * See https://github.com/microsoft/monaco-editor/issues/4325
+     */
+    if (!(event instanceof KeyboardEvent)) return;
+
     if (event.key === CAPS_LOCK && disableCapsOnCapsKeyup) {
       setCapsState(false);
       disableCapsOnCapsKeyup = false;
@@ -108,7 +110,14 @@ if (os !== "Unknown") {
     }
   });
 
-  document.addEventListener("keydown", (event) => {
+  document.addEventListener("keydown", (event: Event) => {
+    /*
+     * Autofill in Chrome/Edge can send a keydown event of type Event that will still
+     * trigger the keydown event listener, but we only care about keyboard events.
+     * See https://github.com/microsoft/monaco-editor/issues/4325
+     */
+    if (!(event instanceof KeyboardEvent)) return;
+
     if (event.key === CAPS_LOCK && disableCapsOnCapsKeyup) {
       disableCapsOnCapsKeyup = false;
     }
