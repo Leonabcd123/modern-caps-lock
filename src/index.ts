@@ -45,18 +45,22 @@ if (os !== "Unknown") {
   }
 
   mouseEventsToUpdateOn.forEach((eventType) => {
-    document.addEventListener(eventType, (event: MouseEvent) => {
-      // All platforms except iPad and Android send correct state on MouseEvent.
-      if (!isiPad) {
-        const currentCapsState = getCapsLockModifierState(event);
-        // If Android sends Caps State: off, we allow that, because that means it's using
-        // Virtual keyboard. When using external keyboard, Android will always send Caps
-        // State: on when MouseEvent is fired.
-        if (!isMobile || !currentCapsState) {
-          setCapsState(currentCapsState);
+    document.addEventListener(
+      eventType,
+      (event: MouseEvent) => {
+        // All platforms except iPad and Android send correct state on MouseEvent.
+        if (!isiPad) {
+          const currentCapsState = getCapsLockModifierState(event);
+          // If Android sends Caps State: off, we allow that, because that means it's using
+          // Virtual keyboard. When using external keyboard, Android will always send Caps
+          // State: on when MouseEvent is fired.
+          if (!isMobile || !currentCapsState) {
+            setCapsState(currentCapsState);
+          }
         }
-      }
-    });
+      },
+      { passive: true },
+    );
   });
 
   document.addEventListener("keyup", (event: Event) => {
