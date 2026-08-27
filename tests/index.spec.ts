@@ -202,6 +202,17 @@ describe("caps-lock-state", () => {
       expect(isCapsLockOn()).toBe(true);
     });
 
+    it("trusts modifier state on CapsLock keydown rather than assuming it always means enabling (Firefox sends keydown for disabling too)", () => {
+      dispatch(keyEvent("keydown", { key: "CapsLock", capsLock: true }));
+      expect(isCapsLockOn()).toBe(true);
+
+      // Chromium only ever fires keydown to enable Caps Lock, relying on keyup
+      // to disable it. Firefox fires keydown for both, so a keydown reporting
+      // the modifier as off must actually turn state off, not be ignored.
+      dispatch(keyEvent("keydown", { key: "CapsLock", capsLock: false }));
+      expect(isCapsLockOn()).toBe(false);
+    });
+
     it("does not update state on keydown for a non-CapsLock key", () => {
       dispatch(keyEvent("keydown", { key: "b", capsLock: true }));
       expect(isCapsLockOn()).toBe(false);

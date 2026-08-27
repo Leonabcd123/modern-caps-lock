@@ -83,7 +83,7 @@ if (os !== "Unknown") {
         setCapsState(getCapsLockModifierState(event));
         break;
       case "Mac":
-        // macOS sends only keydown when enabling Caps Lock and only keyup when disabling.
+        // macOS with chromium sends only keydown when enabling Caps Lock and only keyup when disabling.
         if (event.key === CAPS_LOCK) {
           setCapsState(false);
           return;
@@ -133,9 +133,10 @@ if (os !== "Unknown") {
 
         break;
       case "Mac":
-        // macOS sends only keydown when enabling Caps Lock and only keyup when disabling.
+        // macOS with chromium sends only keydown when enabling Caps Lock and only keyup when disabling.
+        // When using firefox, it sends keydown for both enabling and disabling.
         if (event.key === CAPS_LOCK) {
-          setCapsState(true);
+          setCapsState(getCapsLockModifierState(event));
         }
 
         break;
