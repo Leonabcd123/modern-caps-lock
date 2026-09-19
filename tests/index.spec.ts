@@ -2,37 +2,27 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("../src/os-detection.js", () => ({
-  getCurrentOs: vi.fn(),
+vi.mock("../src/platform-detection.js", () => ({
+  getPlatformInfo: vi.fn(),
 }));
 
-import { getCurrentOs } from "../src/os-detection.js";
+import { getPlatformInfo } from "../src/platform-detection.js";
 
 type Os = "Windows" | "Mac" | "Linux" | "Unknown";
 
 type NavOpts = {
   mobile?: boolean;
-  maxTouchPoints?: number;
 };
-
-function setNavigator({ mobile, maxTouchPoints }: NavOpts): void {
-  Object.defineProperty(navigator, "userAgentData", {
-    value: mobile === undefined ? undefined : { mobile },
-    configurable: true,
-  });
-  Object.defineProperty(navigator, "maxTouchPoints", {
-    value: maxTouchPoints ?? 0,
-    configurable: true,
-  });
-}
 
 async function loadModule(
   os: Os,
   navOpts: NavOpts = {},
 ): Promise<typeof import("../src/index.js")> {
   vi.resetModules();
-  setNavigator(navOpts);
-  vi.mocked(getCurrentOs).mockReturnValue(os);
+  vi.mocked(getPlatformInfo).mockReturnValue({
+    os,
+    isMobile: navOpts.mobile ?? false,
+  });
   return import("../src/index.js");
 }
 

@@ -1,18 +1,15 @@
-import { getCurrentOs } from "./os-detection.js";
+import { getPlatformInfo } from "./platform-detection.js";
 
 const CAPS_LOCK = "CapsLock";
 
 type OnCapsChangeCallback = (capsState: boolean) => void;
 const onCapsChangeCallbacks: OnCapsChangeCallback[] = [];
 let capsState = false;
-const os = getCurrentOs();
+const { os, isMobile } = getPlatformInfo();
 
 if (os !== "Unknown") {
   // All events that fire a MouseEvent (or events that inherit from MouseEvent, such as WheelEvent) for which we want to update capsState.
   const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"] as const;
-  const isMobile =
-    // @ts-expect-error navigator.userAgentData is only supported on Chrome/Edge/Opera.
-    navigator.userAgentData?.mobile ?? navigator.maxTouchPoints > 1;
   const isiPad = os === "Mac" && isMobile;
   /*
    * This determines whether we ignore the result of getCapsLockModifierState or not when receiving a keyup event for a key which isn't Caps Lock on iPad.

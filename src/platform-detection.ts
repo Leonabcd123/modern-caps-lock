@@ -17,23 +17,30 @@ function isPlatform(osName: RegExp): boolean {
   );
 }
 
+type Os = "Mac" | "Linux" | "Windows" | "Unknown";
+
 /**
- * Gets the user's current operating system.
+ * Gets the user's platform info.
  *
  * @remarks
  * iPad is treated as Mac, and Android is treated as Linux.
  *
- * @returns The operating system the user is running
+ * @returns The operating system the user is running and whether they're using a mobile device
  */
-export function getCurrentOs(): "Mac" | "Linux" | "Windows" | "Unknown" {
+export function getPlatformInfo(): { os: Os; isMobile: boolean } {
+  let os: Os = "Unknown";
+
   if (isPlatform(/Mac/i)) {
-    return "Mac";
+    os = "Mac";
+  } else if (isPlatform(/Linux|Android/i)) {
+    os = "Linux";
+  } else if (isPlatform(/Win/i)) {
+    os = "Windows";
   }
-  if (isPlatform(/Linux|Android/i)) {
-    return "Linux";
-  }
-  if (isPlatform(/Win/i)) {
-    return "Windows";
-  }
-  return "Unknown";
+
+  const isMobile =
+    // @ts-expect-error navigator.userAgentData is only supported on Chrome/Edge/Opera.
+    navigator.userAgentData?.mobile ?? navigator.maxTouchPoints > 1;
+
+  return { os, isMobile };
 }
