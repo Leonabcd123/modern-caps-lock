@@ -9,21 +9,20 @@ function isPlatform(osName: RegExp): boolean {
    * navigator.userAgentData is experimental, only supported in Chrome, Edge and Opera. Treat it as a source of truth when available.
    * Fallback to navigator.oscpu (which is only supported on Firefox), navigator.userAgent and navigator.platform. If any of them contain osName, return true.
    */
-  if ("userAgentData" in navigator) {
-    // @ts-expect-error navigator.userAgentData is only supported on Chrome/Edge/Opera.
-    return osName.test(navigator.userAgentData.platform);
-  }
-  return (
-    osName.test(
-      // @ts-expect-error navigator.oscpu is only supported on Firefox.
-      navigator.oscpu ?? "",
-    ) ||
-    osName.test(navigator.userAgent) ||
-    osName.test(navigator.platform)
-  );
+
+  // @ts-expect-error navigator.userAgentData is only supported on Chrome/Edge/Opera.
+  const platform = navigator.userAgentData?.platform;
+  return platform !== undefined
+    ? osName.test(platform)
+    : osName.test(
+        // @ts-expect-error navigator.oscpu is only supported on Firefox.
+        navigator.oscpu ?? "",
+      ) ||
+        osName.test(navigator.userAgent) ||
+        osName.test(navigator.platform);
 }
 
-type Os = "Mac" | "Linux" | "Windows" | "Unknown";
+export type Os = "Mac" | "Linux" | "Windows" | "Unknown";
 
 /**
  * Gets the user's platform info.
