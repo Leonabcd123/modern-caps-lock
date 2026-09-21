@@ -8,6 +8,16 @@ let capsState = false;
 const { os, isMobile } = getPlatformInfo();
 
 if (os !== "Unknown") {
+  /**
+   * Get the current Caps Lock state based on the getModifierState function.
+   *
+   * @param event - The event used to check the Caps Lock state
+   * @returns The current Caps Lock state.
+   */
+  function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
+    return event.getModifierState(CAPS_LOCK);
+  }
+
   // All events that fire a MouseEvent (or events that inherit from MouseEvent, such as WheelEvent) for which we want to update capsState.
   const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"] as const;
 
@@ -156,6 +166,7 @@ if (os !== "Unknown") {
   };
 
   const { onKeydown, onKeyup, onMouse } = platformHandlers[os]();
+
   /**
    * Sets the Caps Lock state and calls the previously provided callback function if Caps Lock
    * state has changed.
@@ -166,16 +177,6 @@ if (os !== "Unknown") {
       capsState = newCapsState;
       onCapsChangeCallbacks.forEach((callback) => callback(capsState));
     }
-  }
-
-  /**
-   * Get the current Caps Lock state based on the getModifierState function.
-   *
-   * @param event - The event used to check the Caps Lock state
-   * @returns The current Caps Lock state.
-   */
-  function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
-    return event.getModifierState(CAPS_LOCK);
   }
 
   if (onMouse !== "skip") {
