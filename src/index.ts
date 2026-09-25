@@ -52,25 +52,24 @@ if (os !== "Unknown") {
 
     return {
       onKeydown: (event) => {
-        if (event.key === CAPS_LOCK && disableCapsOnCapsKeyup) {
-          disableCapsOnCapsKeyup = false;
-        }
-
-        /*
-         * Linux on Wayland sends the correct Caps Lock state before toggling Caps Lock
-         * on keydown, so we invert the Caps Lock state to get the state after the toggle.
-         * On keyup, Linux on Wayland always sends `true` for Caps Lock state when toggling
-         * Caps Lock.
-         *
-         * Linux with Firefox on X11/Xwayland sends the correct Caps Lock state for all keys
-         * on keyup and always sends `true` for Caps Lock state on keydown when toggling
-         * Caps Lock. Unfortunately, we can't differentiate between Wayland and X11/Xwayland,
-         * so we currently only support Wayland.
-         *
-         * Linux with Chromium on X11/Xwayland has the same Caps Lock behavior as Linux on
-         * Wayland, so it's also supported.
-         */
         if (event.key === CAPS_LOCK) {
+          if (disableCapsOnCapsKeyup) {
+            disableCapsOnCapsKeyup = false;
+          }
+          /*
+           * Linux on Wayland sends the correct Caps Lock state before toggling Caps Lock
+           * on keydown, so we invert the Caps Lock state to get the state after the toggle.
+           * On keyup, Linux on Wayland always sends `true` for Caps Lock state when toggling
+           * Caps Lock.
+           *
+           * Linux with Firefox on X11/Xwayland sends the correct Caps Lock state for all keys
+           * on keyup and always sends `true` for Caps Lock state on keydown when toggling
+           * Caps Lock. Unfortunately, we can't differentiate between Wayland and X11/Xwayland,
+           * so we currently only support Wayland.
+           *
+           * Linux with Chromium on X11/Xwayland has the same Caps Lock behavior as Linux on
+           * Wayland, so it's also supported.
+           */
           const flippedCapsState = !getCapsLockModifierState(event);
 
           if (flippedCapsState) {
@@ -87,12 +86,12 @@ if (os !== "Unknown") {
         return null;
       },
       onKeyup: (event) => {
-        if (event.key === CAPS_LOCK && disableCapsOnCapsKeyup) {
-          disableCapsOnCapsKeyup = false;
-          return false;
-        }
-
-        if (event.key !== CAPS_LOCK && event.key !== "Unidentified") {
+        if (event.key === CAPS_LOCK) {
+          if (disableCapsOnCapsKeyup) {
+            disableCapsOnCapsKeyup = false;
+            return false;
+          }
+        } else if (event.key !== "Unidentified") {
           // Check whether key is Unidentified because GBoard sends Unidentified keypresses
           // Which don't have Caps State.
           // Linux on Wayland and Linux with Chromium on X11/Xwayland send the correct Caps Lock state on keyup if the key isn't Caps Lock.
