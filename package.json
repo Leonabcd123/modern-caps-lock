@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "vitest"
   },
   "devDependencies": {
     "happy-dom": "^20.10.6",
