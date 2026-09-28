@@ -48,37 +48,34 @@ if (os !== "Unknown") {
 
     return {
       onKeydown: (event) => {
-        if (event.key === CAPS_LOCK) {
-          if (disableCapsOnCapsKeyup) {
-            disableCapsOnCapsKeyup = false;
-          }
-          /*
-           * Linux on Wayland sends the correct Caps Lock state before toggling Caps Lock
-           * on keydown, so we invert the Caps Lock state to get the state after the toggle.
-           * On keyup, Linux on Wayland always sends `true` for Caps Lock state when toggling
-           * Caps Lock.
-           *
-           * Linux with Firefox on X11/Xwayland sends the correct Caps Lock state for all keys
-           * on keyup and always sends `true` for Caps Lock state on keydown when toggling
-           * Caps Lock. Unfortunately, we can't differentiate between Wayland and X11/Xwayland,
-           * so we currently only support Wayland.
-           *
-           * Linux with Chromium on X11/Xwayland has the same Caps Lock behavior as Linux on
-           * Wayland, so it's also supported.
-           */
-          const flippedCapsState = !getCapsLockModifierState(event);
+        if (event.key !== CAPS_LOCK) return null;
 
-          if (flippedCapsState) {
-            return true;
-          } else {
-            /*
-             * When disabling Caps Lock on Linux, Caps Lock only actually disables when it's released (keyup),
-             * but we can only detect Caps Lock state on keydown, so we defer the state
-             * to be updated on keyup, when Caps Lock is released.
-             */
-            disableCapsOnCapsKeyup = true;
-          }
+        disableCapsOnCapsKeyup = false;
+        /*
+         * Linux on Wayland sends the correct Caps Lock state before toggling Caps Lock
+         * on keydown, so we invert the Caps Lock state to get the state after the toggle.
+         * On keyup, Linux on Wayland always sends `true` for Caps Lock state when toggling
+         * Caps Lock.
+         *
+         * Linux with Firefox on X11/Xwayland sends the correct Caps Lock state for all keys
+         * on keyup and always sends `true` for Caps Lock state on keydown when toggling
+         * Caps Lock. Unfortunately, we can't differentiate between Wayland and X11/Xwayland,
+         * so we currently only support Wayland.
+         *
+         * Linux with Chromium on X11/Xwayland has the same Caps Lock behavior as Linux on
+         * Wayland, so it's also supported.
+         */
+        const flippedCapsState = !getCapsLockModifierState(event);
+
+        if (flippedCapsState) {
+          return true;
         }
+        /*
+         * When disabling Caps Lock on Linux, Caps Lock only actually disables when it's released (keyup),
+         * but we can only detect Caps Lock state on keydown, so we defer the state
+         * to be updated on keyup, when Caps Lock is released.
+         */
+        disableCapsOnCapsKeyup = true;
         return null;
       },
       onKeyup: (event) => {
@@ -120,10 +117,7 @@ if (os !== "Unknown") {
       onKeydown: (event) => {
         // macOS with chromium sends only keydown when enabling Caps Lock and only keyup when disabling.
         // When using firefox, it sends keydown for both enabling and disabling.
-        if (event.key === CAPS_LOCK) {
-          return getCapsLockModifierState(event);
-        }
-        return null;
+        return event.key === CAPS_LOCK ? getCapsLockModifierState(event) : null;
       },
       onKeyup: (event) => {
         // macOS with chromium sends only keydown when enabling Caps Lock and only keyup when disabling.
@@ -146,11 +140,7 @@ if (os !== "Unknown") {
         return null;
       },
       // iPad doesn't send correct state on MouseEvent.
-      onMouse: isMobile
-        ? "skip"
-        : (event) => {
-            return getCapsLockModifierState(event);
-          },
+      onMouse: isMobile ? "skip" : getCapsLockModifierState,
     };
   }
 
@@ -167,18 +157,17 @@ if (os !== "Unknown") {
    * state has changed.
    */
   function setCapsState(newCapsState: HandlerResult): void {
-    if (newCapsState === null) return;
-    if (capsState !== newCapsState) {
-      capsState = newCapsState;
-      onCapsChangeCallbacks.forEach((callback) => callback(capsState));
-    }
+    if (newCapsState === null || newCapsState === capsState) return;
+
+    capsState = newCapsState;
+    onCapsChangeCallbacks.forEach((callback) => callback(capsState));
   }
 
   if (onMouse !== "skip") {
     mouseEventsToUpdateOn.forEach((eventType) => {
       document.addEventListener(
         eventType,
-        (event: MouseEvent) => {
+        (event) => {
           setCapsState(onMouse(event));
         },
         { passive: true },
