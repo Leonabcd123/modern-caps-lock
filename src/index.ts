@@ -75,17 +75,14 @@ if (os !== "Unknown") {
       },
       onKeyup: (event) => {
         if (event.key === CAPS_LOCK) {
-          if (disableCapsOnCapsKeyup) {
-            disableCapsOnCapsKeyup = false;
-            return false;
-          }
-        } else if (event.key !== "Unidentified") {
-          // Check whether key is Unidentified because GBoard sends Unidentified keypresses
-          // Which don't have Caps State.
-          // Linux on Wayland and Linux with Chromium on X11/Xwayland send the correct Caps Lock state on keyup if the key isn't Caps Lock.
-          return getCapsLockModifierState(event);
+          const shouldDisable = disableCapsOnCapsKeyup;
+          disableCapsOnCapsKeyup = false;
+          return shouldDisable ? false : null;
         }
-        return null;
+        // Check whether key is Unidentified because GBoard sends Unidentified keypresses
+        // Which don't have Caps State.
+        // Linux on Wayland and Linux with Chromium on X11/Xwayland send the correct Caps Lock state on keyup if the key isn't Caps Lock.
+        return event.key === "Unidentified" ? null : getCapsLockModifierState(event);
       },
       onMouse: (event) => {
         const currentCapsState = getCapsLockModifierState(event);

@@ -378,6 +378,19 @@ describe("caps-lock-state", () => {
       expect(isCapsLockOn()).toBe(false);
     });
 
+    it("ignores a stray CapsLock keyup after a deferred disable has already been consumed", () => {
+      dispatch(keyEvent("keydown", { key: "CapsLock", capsLock: false }));
+      dispatch(keyEvent("keydown", { key: "CapsLock", capsLock: true }));
+      dispatch(keyEvent("keyup", { key: "CapsLock", capsLock: true }));
+      expect(isCapsLockOn()).toBe(false);
+
+      dispatch(mouseEvent("mousedown", true));
+      expect(isCapsLockOn()).toBe(true);
+
+      dispatch(keyEvent("keyup", { key: "CapsLock", capsLock: true }));
+      expect(isCapsLockOn()).toBe(true);
+    });
+
     it("updates state from mouse events", () => {
       expectMouseEventsToUpdateState(isCapsLockOn);
     });
