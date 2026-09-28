@@ -49,8 +49,6 @@ if (os !== "Unknown") {
     return {
       onKeydown: (event) => {
         if (event.key !== CAPS_LOCK) return null;
-
-        disableCapsOnCapsKeyup = false;
         /*
          * Linux on Wayland sends the correct Caps Lock state before toggling Caps Lock
          * on keydown, so we invert the Caps Lock state to get the state after the toggle.
@@ -65,18 +63,15 @@ if (os !== "Unknown") {
          * Linux with Chromium on X11/Xwayland has the same Caps Lock behavior as Linux on
          * Wayland, so it's also supported.
          */
-        const flippedCapsState = !getCapsLockModifierState(event);
-
-        if (flippedCapsState) {
-          return true;
-        }
+        const isEnabling = !getCapsLockModifierState(event);
         /*
          * When disabling Caps Lock on Linux, Caps Lock only actually disables when it's released (keyup),
          * but we can only detect Caps Lock state on keydown, so we defer the state
          * to be updated on keyup, when Caps Lock is released.
          */
-        disableCapsOnCapsKeyup = true;
-        return null;
+        disableCapsOnCapsKeyup = !isEnabling;
+
+        return isEnabling ? true : null;
       },
       onKeyup: (event) => {
         if (event.key === CAPS_LOCK) {
