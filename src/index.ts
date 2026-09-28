@@ -27,7 +27,7 @@ if (os !== "Unknown") {
   type Handlers = {
     onKeydown: Handler<KeyboardEvent>;
     onKeyup: Handler<KeyboardEvent>;
-    // IPad never trusts mouse events, so there's no reason to add the mouse event
+    // iPad never trusts mouse events, so there's no reason to add the mouse event
     // listeners. We set the handler to undefined to signify that.
     onMouse: Handler<MouseEvent> | undefined;
   };
