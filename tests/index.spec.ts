@@ -335,6 +335,9 @@ describe("caps-lock-state", () => {
     it("turns on immediately on CapsLock keydown when modifier state currently reads false", () => {
       dispatch(keyEvent("keydown", { key: "CapsLock", capsLock: false }));
       expect(isCapsLockOn()).toBe(true);
+
+      dispatch(keyEvent("keyup", { key: "CapsLock", capsLock: true }));
+      expect(isCapsLockOn()).toBe(true);
     });
 
     it("does not update state on keydown for a non-CapsLock key", () => {
@@ -344,6 +347,7 @@ describe("caps-lock-state", () => {
 
     it("defers turning off until caps lock keyup when modifier state currently reads true on keydown", () => {
       dispatch(keyEvent("keydown", { key: "CapsLock", capsLock: false }));
+      dispatch(keyEvent("keyup", { key: "CapsLock", capsLock: true }));
       expect(isCapsLockOn()).toBe(true);
 
       dispatch(keyEvent("keydown", { key: "CapsLock", capsLock: true }));
@@ -355,6 +359,7 @@ describe("caps-lock-state", () => {
 
     it("does not let an interleaved keypress on a different key clear the deferred CapsLock toggle", () => {
       dispatch(keyEvent("keydown", { key: "CapsLock", capsLock: false }));
+      dispatch(keyEvent("keyup", { key: "CapsLock", capsLock: true }));
       expect(isCapsLockOn()).toBe(true);
 
       dispatch(keyEvent("keydown", { key: "CapsLock", capsLock: true }));
@@ -380,6 +385,9 @@ describe("caps-lock-state", () => {
 
     it("ignores a stray CapsLock keyup after a deferred disable has already been consumed", () => {
       dispatch(keyEvent("keydown", { key: "CapsLock", capsLock: false }));
+      dispatch(keyEvent("keyup", { key: "CapsLock", capsLock: true }));
+      expect(isCapsLockOn()).toBe(true);
+
       dispatch(keyEvent("keydown", { key: "CapsLock", capsLock: true }));
       dispatch(keyEvent("keyup", { key: "CapsLock", capsLock: true }));
       expect(isCapsLockOn()).toBe(false);
