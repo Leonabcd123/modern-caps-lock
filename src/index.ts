@@ -32,17 +32,13 @@ if (os !== "Unknown") {
     onMouse: Handler<MouseEvent> | "skip";
   };
 
-  const windowsHandler = (event: KeyboardEvent | MouseEvent) => {
-    // Windows always sends the correct Caps Lock state on both keyup and keydown
-    // (for Caps Lock and for regular keys).
-    return getCapsLockModifierState(event);
-  };
-
   function createWindowsHandlers(): Handlers {
     return {
-      onKeydown: windowsHandler,
-      onKeyup: windowsHandler,
-      onMouse: windowsHandler,
+      // Windows always sends the correct Caps Lock state on both keyup and keydown
+      // (for Caps Lock and for regular keys).
+      onKeydown: getCapsLockModifierState,
+      onKeyup: getCapsLockModifierState,
+      onMouse: getCapsLockModifierState,
     };
   }
 
