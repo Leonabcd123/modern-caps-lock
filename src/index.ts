@@ -28,8 +28,8 @@ if (os !== "Unknown") {
     onKeydown: Handler<KeyboardEvent>;
     onKeyup: Handler<KeyboardEvent>;
     // IPad never trusts mouse events, so there's no reason to add the mouse event
-    // listeners. We set the handler to "skip" to signify that.
-    onMouse: Handler<MouseEvent> | "skip";
+    // listeners. We set the handler to undefined to signify that.
+    onMouse: Handler<MouseEvent> | undefined;
   };
 
   function createWindowsHandlers(): Handlers {
@@ -135,7 +135,7 @@ if (os !== "Unknown") {
         return null;
       },
       // iPad doesn't send correct state on MouseEvent.
-      onMouse: isMobile ? "skip" : getCapsLockModifierState,
+      onMouse: isMobile ? undefined : getCapsLockModifierState,
     };
   }
 
@@ -158,7 +158,7 @@ if (os !== "Unknown") {
     onCapsChangeCallbacks.forEach((callback) => callback(capsState));
   }
 
-  if (onMouse !== "skip") {
+  if (onMouse) {
     mouseEventsToUpdateOn.forEach((eventType) => {
       document.addEventListener(
         eventType,
