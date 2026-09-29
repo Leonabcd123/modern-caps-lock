@@ -14,7 +14,9 @@ if (os !== "Unknown") {
    * @param event - The event used to check the Caps Lock state
    * @returns The current Caps Lock state.
    */
-  function getCapsLockModifierState(event: KeyboardEvent | MouseEvent): boolean {
+  function getCapsLockModifierState(
+    event: KeyboardEvent | MouseEvent,
+  ): boolean {
     return event.getModifierState(CAPS_LOCK);
   }
 
@@ -22,7 +24,9 @@ if (os !== "Unknown") {
   const mouseEventsToUpdateOn = ["mousedown", "mousemove", "wheel"] as const;
 
   type HandlerResult = boolean | null;
-  type Handler<E extends KeyboardEvent | MouseEvent> = (event: E) => HandlerResult;
+  type Handler<E extends KeyboardEvent | MouseEvent> = (
+    event: E,
+  ) => HandlerResult;
 
   type Handlers = {
     onKeydown: Handler<KeyboardEvent>;
@@ -82,7 +86,9 @@ if (os !== "Unknown") {
         // Check whether key is Unidentified because GBoard sends Unidentified keypresses
         // Which don't have Caps State.
         // Linux on Wayland and Linux with Chromium on X11/Xwayland send the correct Caps Lock state on keyup if the key isn't Caps Lock.
-        return event.key === "Unidentified" ? null : getCapsLockModifierState(event);
+        return event.key === "Unidentified"
+          ? null
+          : getCapsLockModifierState(event);
       },
       onMouse: (event) => {
         const currentCapsState = getCapsLockModifierState(event);
@@ -167,7 +173,10 @@ if (os !== "Unknown") {
     });
   }
 
-  function addKeyboardListener(type: "keydown" | "keyup", handler: Handler<KeyboardEvent>): void {
+  function addKeyboardListener(
+    type: "keydown" | "keyup",
+    handler: Handler<KeyboardEvent>,
+  ): void {
     document.addEventListener(type, (event: Event) => {
       /*
        * Autofill in Chrome/Edge can send a keydown/keyup event of type Event that

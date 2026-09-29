@@ -27,7 +27,11 @@ function setNavigator({
   if (userAgentData === undefined) {
     Reflect.deleteProperty(navigator, "userAgentData");
   } else {
-    const completeUserAgentData: UserAgentData = { platform: "", mobile: false, ...userAgentData };
+    const completeUserAgentData: UserAgentData = {
+      platform: "",
+      mobile: false,
+      ...userAgentData,
+    };
     Object.defineProperty(navigator, "userAgentData", {
       value: completeUserAgentData,
       configurable: true,
@@ -101,7 +105,8 @@ describe("getPlatformInfo", () => {
 
     it("detects Mac from navigator.userAgent (e.g. iPad Safari reporting 'Mac OS X')", () => {
       setNavigator({
-        userAgent: "Mozilla/5.0 (iPad; CPU OS 16_0 like Mac OS X) AppleWebKit/605.1.15",
+        userAgent:
+          "Mozilla/5.0 (iPad; CPU OS 16_0 like Mac OS X) AppleWebKit/605.1.15",
       });
       expect(getPlatformInfo().os).toBe("Mac");
     });
@@ -115,14 +120,16 @@ describe("getPlatformInfo", () => {
 
     it("detects Android (as Linux) from navigator.userAgent", () => {
       setNavigator({
-        userAgent: "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36",
+        userAgent:
+          "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36",
       });
       expect(getPlatformInfo().os).toBe("Linux");
     });
 
     it("detects Windows from navigator.userAgent", () => {
       setNavigator({
-        userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        userAgent:
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
       });
       expect(getPlatformInfo().os).toBe("Windows");
     });
@@ -197,12 +204,18 @@ describe("getPlatformInfo", () => {
 
   describe("isMobile", () => {
     it("is true when userAgentData.mobile is true, regardless of maxTouchPoints", () => {
-      setNavigator({ userAgentData: { platform: "Windows", mobile: true }, maxTouchPoints: 0 });
+      setNavigator({
+        userAgentData: { platform: "Windows", mobile: true },
+        maxTouchPoints: 0,
+      });
       expect(getPlatformInfo().isMobile).toBe(true);
     });
 
     it("is false when userAgentData.mobile is false, even if maxTouchPoints suggests otherwise", () => {
-      setNavigator({ userAgentData: { platform: "Windows", mobile: false }, maxTouchPoints: 10 });
+      setNavigator({
+        userAgentData: { platform: "Windows", mobile: false },
+        maxTouchPoints: 10,
+      });
       expect(getPlatformInfo().isMobile).toBe(false);
     });
 

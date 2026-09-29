@@ -33,13 +33,20 @@ function keyEvent(
   { key, capsLock = false }: { key: string; capsLock?: boolean },
 ): KeyboardEvent {
   const event = new KeyboardEvent(type, { key, bubbles: true });
-  event.getModifierState = vi.fn((mod) => (mod === "CapsLock" ? capsLock : false));
+  event.getModifierState = vi.fn((mod) =>
+    mod === "CapsLock" ? capsLock : false,
+  );
   return event;
 }
 
-function mouseEvent(type: "mousedown" | "mousemove" | "wheel", capsLock: boolean): MouseEvent {
+function mouseEvent(
+  type: "mousedown" | "mousemove" | "wheel",
+  capsLock: boolean,
+): MouseEvent {
   const event = new MouseEvent(type, { bubbles: true });
-  event.getModifierState = vi.fn((mod) => (mod === "CapsLock" ? capsLock : false));
+  event.getModifierState = vi.fn((mod) =>
+    mod === "CapsLock" ? capsLock : false,
+  );
   return event;
 }
 
