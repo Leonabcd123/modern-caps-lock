@@ -14,7 +14,7 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "happy-dom": "^20.10.6",
+    "happy-dom": "^21.0.4",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8",
     "oxfmt": "^0.59.0",
